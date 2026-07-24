@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* =========================
+     Brand Colors
+  ========================= */
+  --color-primary: #dc2626;
+  --color-primary-dark: #b91c1c;
+  --color-secondary: #f59e0b;
+  --color-accent: #0ea5e9;
+
+  /* =========================
+     Surface Colors
+  ========================= */
+  --color-surface: #f2f2f2;
+  --color-surface-dark: #e5e5e5;
+  --color-surface-light: #f9f9f9;
+
+  /* =========================
+     Neutral Colors
+  ========================= */
+  --color-neutral: #1b1b1b;
+  --color-neutral-dark: #808080;
+  --color-neutral-light: #4d4d4d;
+
+  /* =========================
+     Typography
+  ========================= */
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* =========================
+     Base Theme
+  ========================= */
+  --background: #f9f9f9;
+  --foreground: #1b1b1b;
+}
+
+/* =========================
+   Global Reset
+========================= */
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================
+   Typography System
+========================= */
+.h1 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: clamp(44px, 5.5vw, 64px);
+  font-weight: 600;
+}
+
+.h2 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: clamp(32px, 4vw, 44px);
+  line-height: clamp(40px, 4.5vw, 52px);
+  font-weight: 600;
+}
+
+.h3 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: clamp(28px, 3.5vw, 36px);
+  line-height: clamp(36px, 4vw, 44px);
+  font-weight: 500;
+}
+
+.h4 {
+  font-family: var(--font-heading), sans-serif;
+  font-size: clamp(24px, 3vw, 28px);
+  line-height: clamp(32px, 3.5vw, 36px);
+  font-weight: 500;
+}
+
+/* Body Typography */
+.body-lg {
+  font-family: var(--font-body), sans-serif;
+  font-size: clamp(16px, 1.5vw, 18px);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.body-md {
+  font-family: var(--font-body), sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.body-sm {
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.body-xs {
+  font-family: var(--font-body), sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+/* Default Elements */
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), sans-serif;
+}
+
+p {
+  font-family: var(--font-body), sans-serif;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+@keyframes brand-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.brand-marquee {
+  animation: brand-marquee 45s linear infinite;
+}
