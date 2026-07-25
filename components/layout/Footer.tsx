@@ -43,7 +43,7 @@ export default function Footer() {
             <div>
               <Link href="/" className="inline-block">
                 <Image
-                  src="/logo.svg"
+                  src="/Logo.svg"
                   alt="Auto Shelter"
                   width={180}
                   height={60}
