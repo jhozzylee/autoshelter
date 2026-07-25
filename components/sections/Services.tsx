@@ -23,34 +23,34 @@ const elementVariants: Variants = {
 
 const services = [
   {
-    title: "Oil Change",
+    title: "General Maintenance",
     image: "/services/oil-change.png",
-    href: "/services/oil-change",
+    href: "/services/routine-maintenance",
   },
   {
-    title: "General Maintenance",
+    title: "Detailing",
     image: "/services/general-maintenance.png",
-    href: "/services/general-maintenance",
+    href: "/services/auto-detailing-protection",
   },
   {
     title: "Diagnostics",
     image: "/services/diagnostics.png",
-    href: "/services/diagnostics",
+    href: "/services/vehicle-diagnostics",
   },
   {
     title: "Tyres & Wheels",
     image: "/services/tyres-wheels.png",
-    href: "/services/tyres-wheels",
+    href: "/services/brakes-steering-suspension",
   },
   {
     title: "AC Maintenance",
     image: "/services/ac-maintenance.png",
-    href: "/services/ac-maintenance",
+    href: "/services/battery-electrical",
   },
   {
-    title: "Radiator Repairs",
-    image: "/services/radiator-repairs.png",
-    href: "/services/radiator-repairs",
+    title: "Engine Repairs",
+    image: "/services/engine-transmission-repair.png",
+    href: "/services/engine-transmission-repair",
   },
 ];
 

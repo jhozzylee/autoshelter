@@ -23,11 +23,11 @@ export const servicesMenu: MegaMenuData = {
       title: "Maintenance",
 
       items: [
-        { label: "Oil Change", href: "/services/oil-change" },
-        { label: "Brake Service", href: "/services/brake-service" },
-        { label: "Wheel Alignment", href: "/services/wheel-alignment" },
-        { label: "Battery Replacement", href: "/services/battery" },
-        { label: "Tire Rotation", href: "/services/tire-rotation" },
+        { label: "Oil Change", href: "/services/routine-maintenance" },
+        { label: "Brake Service", href: "/services/brakes-steering-suspension" },
+        { label: "Wheel Alignment", href: "/services/brakes-steering-suspension" },
+        { label: "Battery Replacement", href: "/services/battery-electrical" },
+        { label: "Tire Rotation", href: "/services/routine-maintenance" },
       ],
     },
 
@@ -35,10 +35,10 @@ export const servicesMenu: MegaMenuData = {
       title: "Diagnostics",
 
       items: [
-        { label: "Engine Diagnostics", href: "/services/engine-diagnostics" },
-        { label: "Electrical Diagnostics", href: "/services/electrical" },
-        { label: "Transmission Diagnostics", href: "/services/transmission" },
-        { label: "Check Engine Light", href: "/services/check-engine" },
+        { label: "Engine Diagnostics", href: "/services/vehicle-diagnostics" },
+        { label: "Electrical Diagnostics", href: "/services/vehicle-diagnostics" },
+        { label: "Transmission Diagnostics", href: "/services/vehicle-diagnostics" },
+        { label: "Check Engine Light", href: "/services/vehicle-diagnostics" },
       ],
     },
 
@@ -46,11 +46,11 @@ export const servicesMenu: MegaMenuData = {
       title: "Repairs",
 
       items: [
-        { label: "Engine Repair", href: "/services/engine-repair" },
-        { label: "Transmission Repair", href: "/services/transmission-repair" },
-        { label: "Suspension Repair", href: "/services/suspension" },
-        { label: "Steering Repair", href: "/services/steering" },
-        { label: "Exhaust Repair", href: "/services/exhaust" },
+        { label: "Engine Repair", href: "/services/engine-transmission-repair" },
+        { label: "Transmission Repair", href: "/services/engine-transmission-repair" },
+        { label: "Suspension Repair", href: "/services/brakes-steering-suspension" },
+        { label: "Steering Repair", href: "/services/brakes-steering-suspension" },
+        { label: "Exhaust Repair", href: "/services/engine-transmission-repair" },
       ],
     },
 
@@ -58,10 +58,10 @@ export const servicesMenu: MegaMenuData = {
       title: "Detailing",
 
       items: [
-        { label: "Interior Detailing", href: "/services/interior-detailing" },
-        { label: "Exterior Detailing", href: "/services/exterior-detailing" },
-        { label: "Ceramic Coating", href: "/services/ceramic-coating" },
-        { label: "Paint Protection", href: "/services/paint-protection" },
+        { label: "Interior Detailing", href: "/services/auto-detailing-protection" },
+        { label: "Exterior Detailing", href: "/services/auto-detailing-protection" },
+        { label: "Ceramic Coating", href: "/services/auto-detailing-protection" },
+        { label: "Paint Protection", href: "/services/auto-detailing-protection" },
       ],
     },
   ],
