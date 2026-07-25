@@ -5,7 +5,7 @@ export default function Logo() {
   return (
     <Link href="/" className="flex shrink-0 items-center gap-3">
       <Image
-        src="/logo.svg"
+        src="/Logo.svg"
         alt="Auto Shelter Logo"
         width={140}
         height={40}
