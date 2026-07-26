@@ -211,7 +211,7 @@ export default function PartsShowcase() {
           className="mt-10 sm:mt-16 flex justify-center"
         >
           <Link
-            href="/parts"
+            href="/inventory"
             className="w-full px-4 sm:w-auto sm:px-0"
           >
             <Button className="w-full justify-center sm:w-auto">

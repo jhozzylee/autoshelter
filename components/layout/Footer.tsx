@@ -2,32 +2,51 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Container from "@/components/ui/Container";
 
 const footerLinks = {
   Explore: [
     { label: "Vehicles", href: "/vehicles" },
     { label: "Services", href: "/services" },
-    { label: "Parts", href: "/parts" },
+    { label: "Inventory", href: "/inventory" },
   ],
   Company: [
     { label: "About Us", href: "/about" },
-    { label: "Why Us", href: "/about" },
-    { label: "How It Works", href: "/about" },
+    { label: "Why Us", href: "/#why-us" },
+    { label: "How It Works", href: "/#how-it-works" },
   ],
   Contact: [
     { label: "Contact Us", href: "/contact" },
-    { label: "Book a Service", href: "/book-service" },
+    { label: "Book a Service", href: "https://www.aribooking.utilitymobileapps.com/index.html?shopID=5e8614be6498950015ed765a" },
     { label: "Become a Member", href: "/membership" },
   ],
   Social: [
-    { label: "Instagram", href: "https://instagram.com" },
-    { label: "Facebook", href: "https://facebook.com" },
-    { label: "LinkedIn", href: "https://linkedin.com" },
+    { label: "Instagram", href: "https://www.instagram.com/auto_shelter/" },
+    { label: "Facebook", href: "https://www.facebook.com/AutoShelterLimited" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/auto-shelter/" },
   ],
 };
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  const handleHashLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("/#")) return;
+
+    const targetId = href.replace("/#", "");
+    
+    // If on homepage, perform smooth scroll without full navigation
+    if (pathname === "/") {
+      e.preventDefault();
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", `#${targetId}`);
+      }
+    }
+  };
+
   return (
     <footer className="relative bg-neutral-950 text-white pt-12 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 overflow-hidden border-t border-white/10">
       {/* Background Architectural Watermark */}
@@ -96,6 +115,7 @@ export default function Footer() {
                         ) : (
                           <Link
                             href={link.href}
+                            onClick={(e) => handleHashLink(e, link.href)}
                             className="group inline-flex items-center text-xs sm:text-sm font-light text-neutral-300 transition-colors duration-300 hover:text-[var(--color-primary)]"
                           >
                             <span>{link.label}</span>

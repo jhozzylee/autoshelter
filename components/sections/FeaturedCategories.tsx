@@ -25,17 +25,17 @@ const categories = [
   {
     title: "EV",
     image: "/ev.png",
-    href: "/cars/ev",
+    href: "/vehicles",
   },
   {
     title: "Sedan",
     image: "/sedan.png",
-    href: "/cars/sedan",
+    href: "/vehicles",
   },
   {
     title: "SUV",
     image: "/suv.png",
-    href: "/cars/suv",
+    href: "/vehicles",
   },
 ];
 

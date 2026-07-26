@@ -158,13 +158,13 @@ export default function Hero() {
             variants={elementVariants}
             className="flex flex-col sm:flex-row items-center gap-3.5 sm:gap-4 w-full sm:w-auto justify-center pt-2 px-4 sm:px-0"
           >
-            <Link href="/services" className="w-full sm:w-auto">
+            <Link href="/membership" className="w-full sm:w-auto">
               <Button className="w-full justify-center">
                 Become a Member
               </Button>
             </Link>
 
-            <Link href="/cars" className="w-full sm:w-auto">
+            <Link href="https://www.aribooking.utilitymobileapps.com/index.html?shopID=5e8614be6498950015ed765a" className="w-full sm:w-auto">
               <Button
                 variant="secondary"
                 className="w-full justify-center"

@@ -27,42 +27,42 @@ const vehicles = [
     details: "4 Doors, 5 Seats",
     type: "Gasoline",
     image: "/vehicles/audi-a5.png",
-    href: "/cars/audi-a5",
+    href: "/vehicles/2023-audi-A5",
   },
   {
     name: "2024 Tesla Model Y",
     details: "4 Doors, 5 Seats",
     type: "Electric",
     image: "/vehicles/tesla-model-y.png",
-    href: "/cars/tesla-model-y",
+    href: "/vehicles/tesla-model-y",
   },
   {
     name: "2024 Toyota RAV4",
     details: "4 Doors, 5 Seats",
     type: "Hybrid",
     image: "/vehicles/rav4.jpg",
-    href: "/cars/toyota-rav4",
+    href: "/vehicles/toyota-rav4",
   },
   {
     name: "2023 Mercedes GLC",
     details: "4 Doors, 5 Seats",
     type: "Gasoline",
     image: "/vehicles/glc.png",
-    href: "/cars/mercedes-glc",
+    href: "/vehicles/mercedes-glc",
   },
   {
     name: "2024 BMW i4",
     details: "4 Doors, 5 Seats",
     type: "Electric",
     image: "/vehicles/bmw-i4.png",
-    href: "/cars/bmw-i4",
+    href: "/vehicles/bmw-i4",
   },
   {
     name: "2023 Lexus RX",
     details: "4 Doors, 5 Seats",
     type: "Hybrid",
     image: "/vehicles/lexus-rx.png",
-    href: "/cars/lexus-rx",
+    href: "/vehicles/lexus-rx",
   },
 ];
 
@@ -182,7 +182,7 @@ export default function VehicleCollection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-10 sm:mt-16 flex justify-center"
         >
-          <Link href="/cars" className="w-full sm:w-auto px-4 sm:px-0">
+          <Link href="/vehicles" className="w-full sm:w-auto px-4 sm:px-0">
             <Button className="w-full justify-center sm:w-auto">
               Explore Our Collection
             </Button>

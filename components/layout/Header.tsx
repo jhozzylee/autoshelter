@@ -7,6 +7,7 @@ import Navigation from "./Navigation";
 import Button from "@/components/ui/Button";
 import { UserRound, Menu, X } from "lucide-react";
 import { motion, AnimatePresence, Variants, Easing } from "framer-motion";
+import Link from "next/link";
 
 const PREMIUM_EASE: Easing = [0.16, 1, 0.3, 1];
 
@@ -93,7 +94,9 @@ export default function Header() {
 
             {/* CTA Button (Desktop only) */}
             <div className="hidden lg:block">
-              <Button>Get Quote</Button>
+              <Link href="/contact" className="w-full sm:w-auto">
+                <Button>Contact Us</Button>
+              </Link>
             </div>
           </div>
         </div>
