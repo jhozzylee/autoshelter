@@ -33,7 +33,7 @@ const faqs: FAQItem[] = [
   {
     question: "Can I get a quote before work begins?",
     answer:
-      "Absolutely. We maintain total transparency—our team conducts an initial evaluation and provides a detailed cost breakdown before executing any service.",
+      "Absolutely. We maintain total transparency, our team conducts an initial evaluation and provides a detailed cost breakdown before executing any service.",
   },
   {
     question: "What if my vehicle needs more work than expected?",

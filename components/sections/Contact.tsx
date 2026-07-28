@@ -37,7 +37,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="bg-white py-12 sm:py-16 lg:py-24">
+    <section className="bg-white pt-24 sm:pt-28 py-32 lg:py-40">
       <Container>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           {/* Left Column: Direct Contact Info & Services */}

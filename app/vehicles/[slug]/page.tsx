@@ -34,15 +34,15 @@ export default async function CarPage({ params }: CarPageProps) {
   return (
     <main className="bg-white text-neutral-900 overflow-hidden">
       {/* Editorial Dark Hero */}
-      <section className="relative bg-neutral-950 text-white py-16 sm:py-24 lg:py-28 overflow-hidden">
+      <section className="relative bg-neutral-950 text-white py-32 lg:py-40 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-6xl bg-[var(--color-primary)]/10 blur-[150px] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-40" />
 
         <Container className="relative z-10">
-          <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="flex flex-col lg:grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
             
-            {/* Left: Text Details */}
-            <div className="lg:col-span-5">
+            {/* Left: Text Details (Header info + Price) */}
+            <div className="lg:col-span-5 order-1 lg:order-none w-full">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 text-[10px] uppercase tracking-[0.3em] font-medium border border-white/15 rounded-full bg-black/40 backdrop-blur-md text-neutral-300 mb-6">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
                 {car.type} Concierge
@@ -69,14 +69,10 @@ export default async function CarPage({ params }: CarPageProps) {
                   </span>
                 </div>
               )}
-
-              <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                <CarImportCTA car={car} className="w-full sm:w-auto justify-center" />
-              </div>
             </div>
 
-            {/* Right: Wider Image Container */}
-            <div className="lg:col-span-7">
+            {/* Right: Vehicle Image (Order 2 on Mobile) */}
+            <div className="lg:col-span-7 order-2 lg:order-none w-full">
               <div className="relative aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900 shadow-2xl group">
                 <Image
                   src={car.image}
@@ -104,6 +100,13 @@ export default async function CarPage({ params }: CarPageProps) {
                     </span>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* CTA Container (Order 3 on Mobile, aligned with left column on Desktop) */}
+            <div className="lg:col-span-5 order-3 lg:order-none w-full lg:-mt-6">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <CarImportCTA car={car} className="w-full sm:w-auto justify-center" />
               </div>
             </div>
 

@@ -32,7 +32,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
   return (
     <main className="bg-white text-neutral-900 overflow-hidden">
       {/* Dark Luxury Hero Header */}
-      <section className="relative bg-neutral-950 text-white py-24 lg:py-32 overflow-hidden">
+      <section className="relative bg-neutral-950 text-white py-32 lg:py-40 overflow-hidden">
         {/* Subtle Radial Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl bg-[var(--color-primary)]/10 blur-[140px] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none opacity-50" />

@@ -2,7 +2,7 @@ import Container from "@/components/ui/Container";
 
 export default function InventoryHero() {
   return (
-    <section className="relative overflow-hidden bg-neutral-950 text-white py-24 sm:py-32 lg:py-40">
+    <section className="relative overflow-hidden bg-neutral-950 text-white py-32 lg:py-40">
       {/* Ambient Radial Accent Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-5xl bg-[var(--color-primary)]/10 blur-[150px] pointer-events-none" />
 

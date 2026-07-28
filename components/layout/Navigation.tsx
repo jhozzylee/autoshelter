@@ -32,7 +32,7 @@ export default function Navigation({ onItemClick }: NavigationProps) {
 
   return (
     <nav className="w-full">
-      <ul className="flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:gap-10">
+      <ul className="flex flex-col items-start gap-5 sm:gap-6 lg:flex-row lg:items-center lg:gap-10">
         {navigation.map((item) => {
           const hasSections = "sections" in item;
           const isHovered = activeMenu === item.label;
@@ -42,7 +42,7 @@ export default function Navigation({ onItemClick }: NavigationProps) {
           return (
             <li
               key={item.label}
-              className="relative w-full py-2 lg:w-auto lg:py-0"
+              className="relative w-full border-b border-white/5 pb-2.5 lg:w-auto lg:border-none lg:pb-0"
               onMouseEnter={() => hasSections && setActiveMenu(item.label)}
               onMouseLeave={() => hasSections && setActiveMenu(null)}
             >
@@ -53,7 +53,7 @@ export default function Navigation({ onItemClick }: NavigationProps) {
                     <Link
                       href={href}
                       onClick={handleLinkClick}
-                      className="body-md font-medium tracking-wide text-[var(--color-surface)]/75 transition-colors duration-200 hover:text-[var(--color-surface)]"
+                      className="body-md text-base font-medium tracking-wide text-[var(--color-surface)]/85 transition-colors duration-200 hover:text-[var(--color-surface)] lg:text-sm"
                     >
                       {item.label}
                     </Link>
@@ -61,7 +61,7 @@ export default function Navigation({ onItemClick }: NavigationProps) {
                     {/* Mobile Toggle Button */}
                     <button
                       onClick={() => toggleMobileSubmenu(item.label)}
-                      className="p-1 text-neutral-400 hover:text-white lg:hidden"
+                      className="p-2 text-neutral-400 hover:text-white lg:hidden"
                       aria-label={`Toggle ${item.label} submenu`}
                     >
                       <motion.span
@@ -69,7 +69,7 @@ export default function Navigation({ onItemClick }: NavigationProps) {
                         transition={{ duration: 0.3, ease: LUXURY_EASE }}
                         className="block"
                       >
-                        <ChevronDown size={16} />
+                        <ChevronDown size={18} />
                       </motion.span>
                     </button>
 
@@ -109,7 +109,7 @@ export default function Navigation({ onItemClick }: NavigationProps) {
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
                           transition={{ duration: 0.35, ease: LUXURY_EASE }}
-                          className="overflow-hidden pl-4 pt-2"
+                          className="overflow-hidden pl-3 pt-3 pb-1"
                         >
                           <MegaMenu menu={item} onItemClick={handleLinkClick} />
                         </motion.div>
@@ -121,7 +121,7 @@ export default function Navigation({ onItemClick }: NavigationProps) {
                 <Link
                   href={item.href}
                   onClick={handleLinkClick}
-                  className="body-md block w-full font-medium tracking-wide text-[var(--color-surface)]/75 transition-colors duration-200 hover:text-[var(--color-surface)]"
+                  className="body-md block w-full py-1 text-base font-medium tracking-wide text-[var(--color-surface)]/85 transition-colors duration-200 hover:text-[var(--color-surface)] lg:text-sm"
                 >
                   {item.label}
                 </Link>
