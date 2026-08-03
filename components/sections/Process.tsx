@@ -44,7 +44,7 @@ const steps = [
 
 export default function Process() {
   return (
-    <section id="how-it-works" className=" scroll-mt-20 bg-white py-12 text-neutral-900 overflow-hidden sm:py-20 lg:py-32">
+    <section id="how-it-works" className=" scroll-mt-20 bg-white py-8 text-neutral-900 overflow-hidden sm:py-14 lg:py-16">
       <Container>
         {/* Section Header */}
         <motion.div

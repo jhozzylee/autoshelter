@@ -22,7 +22,7 @@ const elementVariants: Variants = {
 
 export default function FinalCTA() {
   return (
-    <section className="bg-white py-12 text-white overflow-hidden sm:py-20 lg:py-32">
+    <section className="bg-white py-8 text-white overflow-hidden sm:py-14 lg:py-16">
       <Container>
         <motion.div
           initial="hidden"

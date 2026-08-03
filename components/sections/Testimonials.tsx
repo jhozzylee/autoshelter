@@ -74,7 +74,7 @@ export default function Testimonials() {
   const testimonial = testimonials[activeIndex];
 
   return (
-    <section className="bg-white py-12 text-neutral-900 overflow-hidden sm:py-20 lg:py-28">
+    <section className="bg-white py-8 text-neutral-900 overflow-hidden sm:py-14 lg:py-16">
       <Container>
         {/* Section Header */}
         <motion.div

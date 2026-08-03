@@ -88,7 +88,7 @@ export default function AboutPage() {
   return (
     <main className="bg-white text-neutral-900 overflow-hidden">
       {/* Hero Section */}
-      <section className="relative flex min-h-[60vh] sm:min-h-[70vh] items-center justify-center overflow-hidden bg-neutral-950 text-white pt-24 pb-16 sm:py-22 lg:py-40">
+      <section className="relative flex min-h-[60vh] sm:min-h-[70vh] items-center justify-center overflow-hidden bg-neutral-950 text-white pt-24 pb-16 py-8 sm:py-14 lg:py-16">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl bg-[var(--color-primary)]/10 blur-[140px] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none opacity-50" />
 
@@ -131,7 +131,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="py-16 sm:py-24 lg:py-32 bg-white">
+      <section className="py-8 sm:py-14 lg:py-16 bg-white">
         <Container>
           <motion.div
             initial="hidden"
@@ -232,7 +232,7 @@ export default function AboutPage() {
       </section>
 
       {/* Automotive Journey / Approach */}
-      <section className="bg-neutral-50 border-y border-neutral-200 py-16 sm:py-24 lg:py-32">
+      <section className="bg-neutral-50 border-y border-neutral-200 py-8 sm:py-14 lg:py-16">
         <Container>
           <motion.div
             initial="hidden"
@@ -343,7 +343,7 @@ export default function AboutPage() {
               variants={elementVariants}
               className="h2 tracking-tight text-white"
             >
-              Creating a Complete Automotive{" "}
+              Creating a Complete Automotive{" "}<br/>
               <span className="italic text-[var(--color-primary)]">
                 One-Stop Shop.
               </span>
@@ -364,7 +364,7 @@ export default function AboutPage() {
       </section>
 
       {/* What We Do Services Grid */}
-      <section className="py-16 sm:py-24 lg:py-32 bg-white">
+      <section className="py-8 sm:py-14 lg:py-16 bg-white">
         <Container>
           <motion.div
             initial="hidden"
@@ -434,7 +434,7 @@ export default function AboutPage() {
       </section>
 
       {/* Commitment Section */}
-      <section className="bg-neutral-50 border-t border-neutral-200 py-16 sm:py-24 lg:py-32">
+      <section className="bg-neutral-50 border-t border-neutral-200 py-8 sm:py-14 lg:py-16">
         <Container>
           <motion.div
             initial="hidden"
@@ -498,7 +498,7 @@ export default function AboutPage() {
       </section>
 
       {/* Final CTA Banner */}
-      <section className="py-16 sm:py-24 lg:py-32 bg-white text-white">
+      <section className="py-8 sm:py-14 lg:py-16 bg-white text-white">
         <Container>
           <motion.div
             initial="hidden"

@@ -56,7 +56,7 @@ const services = [
 
 export default function Services() {
   return (
-    <section className="bg-white py-12 text-neutral-900 overflow-hidden sm:py-20 lg:py-32">
+    <section className="bg-white py-8 text-neutral-900 overflow-hidden sm:py-14 lg:py-16">
       <Container>
         {/* Header Section */}
         <motion.div 

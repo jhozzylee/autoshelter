@@ -41,7 +41,7 @@ const categories = [
 
 export default function FeaturedCategories() {
   return (
-    <section className="bg-white py-12 text-neutral-900 overflow-hidden sm:py-20 lg:py-32">
+    <section className="bg-white py-8 text-neutral-900 overflow-hidden sm:py-14 lg:py-16">
       <Container>
         {/* Constrained Grid centered on desktop */}
         <motion.div

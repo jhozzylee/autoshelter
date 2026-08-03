@@ -40,35 +40,35 @@ const vehicles = [
     name: "2024 Toyota RAV4",
     details: "4 Doors, 5 Seats",
     type: "Hybrid",
-    image: "/vehicles/rav4.jpg",
-    href: "/vehicles/toyota-rav4",
+    image: "/vehicles/toyota-rav4.png",
+    href: "/vehicles/2024-toyota-rav4",
   },
   {
     name: "2023 Mercedes GLC",
     details: "4 Doors, 5 Seats",
     type: "Gasoline",
-    image: "/vehicles/glc.png",
-    href: "/vehicles/mercedes-glc",
+    image: "/vehicles/mercedes-glc.png",
+    href: "/vehicles/2023-mercedes-glc",
   },
   {
     name: "2024 BMW i4",
     details: "4 Doors, 5 Seats",
     type: "Electric",
     image: "/vehicles/bmw-i4.png",
-    href: "/vehicles/bmw-i4",
+    href: "/vehicles/2024-bmw-i4",
   },
   {
     name: "2023 Lexus RX",
     details: "4 Doors, 5 Seats",
     type: "Hybrid",
     image: "/vehicles/lexus-rx.png",
-    href: "/vehicles/lexus-rx",
+    href: "/vehicles/2023-lexus-rx",
   },
 ];
 
 export default function VehicleCollection() {
   return (
-    <section className="bg-[var(--color-neutral)] py-12 sm:py-20 lg:py-32 text-[var(--color-surface)] overflow-hidden">
+    <section className="bg-[var(--color-neutral)] py-8 sm:py-14 lg:py-16 text-[var(--color-surface)] overflow-hidden">
       <Container>
         {/* Header matched to Hero editorial system */}
         <motion.div

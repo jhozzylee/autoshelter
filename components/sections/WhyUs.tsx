@@ -44,7 +44,7 @@ const highlights = [
 
 export default function WhyUs() {
   return (
-    <section id="why-us" className=" scroll-mt-20 py-24 lg:py-32 bg-white text-neutral-900 overflow-hidden">
+    <section id="why-us" className=" scroll-mt-20 py-8 lg:py-16 bg-white text-neutral-900 overflow-hidden">
       <Container>
         {/* Section Header */}
         <motion.div
