@@ -16,8 +16,16 @@ interface CarPageProps {
 
 // Generate static routes dynamically from Sanity
 export async function generateStaticParams() {
-  const vehicles = await client.fetch(VEHICLES_QUERY);
-  
+  const vehicles = await client.fetch(
+    VEHICLES_QUERY,
+    {},
+    {
+      next: {
+        tags: ["vehicle"],
+      },
+    }
+  );
+
   return vehicles.map((car: { slug: string }) => ({
     slug: car.slug,
   }));
@@ -26,8 +34,16 @@ export async function generateStaticParams() {
 export default async function CarPage({ params }: CarPageProps) {
   const { slug } = await params;
 
-  // Fetch the specific vehicle from Sanity by slug
-  const car = await client.fetch(VEHICLE_BY_SLUG_QUERY, { slug });
+  // Fetch single vehicle with cache tag
+  const car = await client.fetch(
+    VEHICLE_BY_SLUG_QUERY,
+    { slug },
+    {
+      next: {
+        tags: [`vehicle-${slug}`],
+      },
+    }
+  );
 
   if (!car) {
     notFound();
