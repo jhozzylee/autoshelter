@@ -29,7 +29,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
     description
   }`;
 
-  const product = await client.fetch(query, { slug });
+  // Added revalidation tag matching the "inventory" schema type
+  const product = await client.fetch(
+    query, 
+    { slug }, 
+    { next: { tags: ["inventory"] } }
+  );
 
   if (!product) {
     notFound();

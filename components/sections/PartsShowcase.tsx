@@ -23,7 +23,12 @@ export default async function PartsShowcase() {
     "image": image.asset->url
   }`;
 
-  const parts: SanityProduct[] = await client.fetch(query);
+  // Added revalidation tag matching the "inventory" schema type
+  const parts: SanityProduct[] = await client.fetch(
+    query, 
+    {}, 
+    { next: { tags: ["inventory"] } }
+  );
 
   if (!parts || parts.length === 0) return null;
 

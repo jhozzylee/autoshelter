@@ -19,8 +19,12 @@ interface RelatedProductsProps {
 }
 
 export default async function RelatedProducts({ currentProduct }: RelatedProductsProps) {
-  // Fetch all inventory items from Sanity
-  const allProducts: SanityProduct[] = await client.fetch(INVENTORY_QUERY);
+  // Fetch all inventory items from Sanity with the revalidation tag
+  const allProducts: SanityProduct[] = await client.fetch(
+    INVENTORY_QUERY, 
+    {}, 
+    { next: { tags: ["inventory"] } }
+  );
 
   // Filter related products by matching category, excluding the current product
   const relatedProducts = allProducts

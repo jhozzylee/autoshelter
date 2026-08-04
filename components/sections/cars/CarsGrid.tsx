@@ -23,8 +23,12 @@ interface SanityVehicle {
 }
 
 export default async function CarsGrid() {
-  // Fetch vehicles directly from Sanity
-  const cars: SanityVehicle[] = await client.fetch(VEHICLES_QUERY);
+  // Fetch vehicles directly from Sanity with the revalidation tag
+  const cars: SanityVehicle[] = await client.fetch(
+    VEHICLES_QUERY, 
+    {}, 
+    { next: { tags: ["vehicle"] } }
+  );
 
   return (
     <section className="bg-slate-50 py-12 sm:py-20 lg:py-32 text-neutral-900 overflow-hidden">

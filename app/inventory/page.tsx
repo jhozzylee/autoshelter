@@ -5,8 +5,12 @@ import { client } from "@/sanity/lib/client";
 import { INVENTORY_QUERY } from "@/sanity/lib/queries";
 
 export default async function InventoryPage() {
-  // Fetch live inventory items directly from Sanity
-  const products = await client.fetch(INVENTORY_QUERY);
+  // Fetch live inventory items directly from Sanity with revalidation tag
+  const products = await client.fetch(
+    INVENTORY_QUERY, 
+    {}, 
+    { next: { tags: ["inventory"] } }
+  );
 
   return (
     <main>

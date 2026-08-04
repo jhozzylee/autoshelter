@@ -21,7 +21,7 @@ const elementVariants: Variants = {
 };
 
 export default async function VehicleCollection() {
-  // Fetch the 6 most recent vehicles from Sanity
+  // Fetch the 6 most recent vehicles from Sanity with revalidation tag
   const query = `*[_type == "vehicle"] | order(_createdAt desc)[0...6]{
     _id,
     name,
@@ -31,7 +31,11 @@ export default async function VehicleCollection() {
     "image": image.asset->url
   }`;
 
-  const vehicles = await client.fetch(query);
+  const vehicles = await client.fetch(
+    query, 
+    {}, 
+    { next: { tags: ["vehicle"] } }
+  );
 
   if (!vehicles || vehicles.length === 0) return null;
 
