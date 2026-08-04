@@ -1,32 +1,42 @@
-import { revalidateTag } from 'next/cache'
-import { type NextRequest, NextResponse } from 'next/server'
-import { parseBody } from 'next-sanity/webhook'
+import { revalidateTag } from "next/cache";
+import { type NextRequest, NextResponse } from "next/server";
+import { parseBody } from "next-sanity/webhook";
 
 export async function POST(req: NextRequest) {
   try {
-    const { isValid, body } = await parseBody<{ _type: string }>(
+    const { isValidSignature, body } = await parseBody<{ _type: string }>(
       req,
       process.env.SANITY_WEBHOOK_SECRET
-    )
+    );
 
-    if (!isValid) {
-      return new NextResponse('Invalid signature', { status: 401 })
+    if (!isValidSignature) {
+      return NextResponse.json(
+        { message: "Invalid signature" },
+        { status: 401 }
+      );
     }
 
     if (!body?._type) {
-      return new NextResponse('Bad Request', { status: 400 })
+      return NextResponse.json(
+        { message: "Bad Request: Missing _type" },
+        { status: 400 }
+      );
     }
 
-    // Revalidate based on the document type or tags you use for fetching
-    revalidateTag(body._type)
+    // Revalidate the cache tag for the updated document type
+    revalidateTag(body._type, "max");
 
     return NextResponse.json({
       revalidated: true,
       now: Date.now(),
       body,
-    })
-  } catch (err: any) {
-    console.error(err)
-    return new NextResponse(err.message, { status: 500 })
+    });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
