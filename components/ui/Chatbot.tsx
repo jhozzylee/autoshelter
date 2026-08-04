@@ -20,6 +20,7 @@ const PREMIUM_EASE: Easing = [0.16, 1, 0.3, 1];
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -35,11 +36,11 @@ export default function Chatbot() {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, isTyping]);
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const text = textToSend || inputValue.trim();
-    if (!text) return;
+    if (!text || isTyping) return;
 
     const userMsg: Message = {
       id: Date.now().toString(),
@@ -47,17 +48,44 @@ export default function Chatbot() {
       text,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     if (!textToSend) setInputValue("");
+    setIsTyping(true);
 
-    setTimeout(() => {
+    try {
+      const apiMessages = updatedMessages.map((msg) => ({
+        role: msg.sender === "user" ? "user" : "assistant",
+        content: msg.text,
+      }));
+
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.error || "Something went wrong");
+
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
         sender: "bot",
-        text: "Thank you for reaching out. Our team has received your message and will guide you through the next steps shortly.",
+        text: data.reply,
       };
+
       setMessages((prev) => [...prev, botReply]);
-    }, 800);
+    } catch (error) {
+      const errorReply: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: "bot",
+        text: "I'm sorry, I'm having trouble connecting right now. Please try again later.",
+      };
+      setMessages((prev) => [...prev, errorReply]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   return (
@@ -79,7 +107,7 @@ export default function Chatbot() {
               scale: 0.95,
               transition: { duration: 0.25, ease: PREMIUM_EASE },
             }}
-            className="fixed bottom-24 right-6 z-50 flex h-[520px] w-[calc(100vw-3rem)] max-w-[380px] flex-col overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-2xl shadow-black/15"
+            className="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 z-50 flex sm:h-[520px] sm:w-[calc(100vw-3rem)] sm:max-w-[380px] flex-col overflow-hidden bg-white sm:rounded-3xl sm:border sm:border-neutral-200 sm:shadow-2xl sm:shadow-black/15"
           >
             {/* Header */}
             <div className="relative bg-neutral-950 px-6 py-5 text-white">
@@ -137,7 +165,18 @@ export default function Chatbot() {
                 </div>
               ))}
 
-              {messages.length === 1 && (
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-white border border-neutral-200/80 text-neutral-400 rounded-2xl rounded-tl-sm px-4 py-3 text-sm shadow-sm flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-400 [animation-delay:-0.3s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-400 [animation-delay:-0.15s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-neutral-400" />
+                  </div>
+                </div>
+              )}
+
+              {messages.length === 1 && !isTyping && (
                 <div className="pt-2 space-y-2">
                   <p className="text-[10px] uppercase tracking-widest font-mono text-neutral-400 px-1">
                     Quick Inquiries
@@ -170,14 +209,15 @@ export default function Chatbot() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your message..."
-                  className="min-w-0 flex-1 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-3 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors focus:border-neutral-900 focus:bg-white"
+                  disabled={isTyping}
+                  className="min-w-0 flex-1 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-3 text-xs text-neutral-900 placeholder:text-neutral-400 outline-none transition-colors focus:border-neutral-900 focus:bg-white disabled:opacity-50"
                 />
 
                 <button
                   type="submit"
                   aria-label="Send message"
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-white transition-all duration-200 hover:bg-[var(--color-primary)] active:scale-95 disabled:opacity-50"
-                  disabled={!inputValue.trim()}
+                  disabled={!inputValue.trim() || isTyping}
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -204,13 +244,14 @@ export default function Chatbot() {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle Auto Shelter assistant"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl shadow-black/20 transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2"
+        className={`fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-neutral-950 text-white shadow-xl shadow-black/20 transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 ${
+          isOpen ? "hidden sm:flex" : "flex"
+        }`}
       >
         <span className="relative flex items-center justify-center">
           {isOpen ? (
             <span className="text-xl font-light leading-none">✕</span>
           ) : (
-            /* Sparkles / AI Concierge Icon */
             <svg
               viewBox="0 0 24 24"
               fill="none"
