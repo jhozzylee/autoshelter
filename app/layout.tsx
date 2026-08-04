@@ -5,6 +5,7 @@ import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import Chatbot from "@/components/ui/Chatbot";
 
 import Header from "@/components/layout/Header";
+import CartDrawer from "@/components/ui/CartDrawer";
 
 export const metadata: Metadata = {
   title: {
@@ -23,16 +24,21 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="relative min-h-screen flex flex-col bg-neutral-900 overflow-x-hidden">
-        {/* Header floats on top without occupying flex height */}
+        {/* Fixed Header */}
         <div className="fixed top-0 left-0 right-0 z-50">
           <Header />
         </div>
         
-        <main className="flex-1 w-full ">
+        <main className="flex-1 w-full">
           {children}
-           <WhatsAppButton />
-           <Chatbot />
         </main>
+
+        {/* Floating Widgets */}
+        <WhatsAppButton />
+        <Chatbot />
+
+        {/* Cart Drawer Overlay - Rendered last to sit on top of everything */}
+        <CartDrawer />
       </body>
     </html>
   );

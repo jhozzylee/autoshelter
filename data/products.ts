@@ -1,4 +1,7 @@
+// data/products.ts
+
 export interface Product {
+  id: string; // Add id to the interface
   slug: string;
   name: string;
   category: string;
@@ -11,6 +14,7 @@ export interface Product {
 
 export const products: Product[] = [
   {
+    id: "toyota-corolla-oil-filter", // Use slug as id
     slug: "toyota-corolla-oil-filter",
     name: "Toyota Corolla Oil Filter",
     category: "Filters",
@@ -21,8 +25,8 @@ export const products: Product[] = [
       "A quality oil filter designed to help keep engine oil clean and support reliable engine performance.",
     inStock: true,
   },
-
   {
+    id: "toyota-corolla-brake-pads",
     slug: "toyota-corolla-brake-pads",
     name: "Toyota Corolla Brake Pads",
     category: "Brakes",
@@ -33,8 +37,8 @@ export const products: Product[] = [
       "Quality replacement brake pads designed to provide reliable stopping performance and dependable everyday use.",
     inStock: true,
   },
-
   {
+    id: "toyota-corolla-air-filter",
     slug: "toyota-corolla-air-filter",
     name: "Toyota Corolla Air Filter",
     category: "Filters",
@@ -45,8 +49,8 @@ export const products: Product[] = [
       "A replacement air filter designed to help maintain clean airflow and efficient engine performance.",
     inStock: true,
   },
-
   {
+    id: "car-battery-12v",
     slug: "car-battery-12v",
     name: "12V Car Battery",
     category: "Electrical",
@@ -57,8 +61,8 @@ export const products: Product[] = [
       "A reliable automotive battery designed to provide dependable starting power and everyday performance.",
     inStock: true,
   },
-
   {
+    id: "automotive-radiator",
     slug: "automotive-radiator",
     name: "Automotive Radiator",
     category: "Cooling System",
@@ -69,8 +73,8 @@ export const products: Product[] = [
       "A quality radiator designed to support effective engine cooling and reliable vehicle performance.",
     inStock: true,
   },
-
   {
+    id: "alloy-wheel-set",
     slug: "alloy-wheel-set",
     name: "Alloy Wheel",
     category: "Wheels",
@@ -81,8 +85,8 @@ export const products: Product[] = [
       "A durable alloy wheel designed to combine dependable performance with a clean, modern appearance.",
     inStock: true,
   },
-
   {
+    id: "led-headlight",
     slug: "led-headlight",
     name: "LED Headlight",
     category: "Exterior",
@@ -93,8 +97,8 @@ export const products: Product[] = [
       "A modern LED headlight designed to provide improved visibility and a clean exterior finish.",
     inStock: true,
   },
-
   {
+    id: "engine-drive-belt",
     slug: "engine-drive-belt",
     name: "Engine Drive Belt",
     category: "Engine Parts",
@@ -105,8 +109,8 @@ export const products: Product[] = [
       "A quality replacement drive belt designed for reliable engine operation and everyday performance.",
     inStock: true,
   },
-
   {
+    id: "car-floor-mats",
     slug: "car-floor-mats",
     name: "Premium Car Floor Mats",
     category: "Accessories",

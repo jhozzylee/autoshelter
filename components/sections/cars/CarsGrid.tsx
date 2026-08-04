@@ -2,39 +2,64 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Container from "@/components/ui/Container";
-import { cars } from "@/data/cars";
+import { client } from "@/sanity/lib/client";
+import { VEHICLES_QUERY } from "@/sanity/lib/queries";
 
-export default function CarsGrid() {
+// Define the TypeScript interface matching your Sanity query shape
+interface SanityVehicle {
+  _id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  model: string;
+  year: number;
+  type: "Gasoline" | "Electric" | "Hybrid";
+  price: string;
+  image: string;
+  specifications: {
+    doors: string;
+    seats: string;
+  };
+}
+
+export default async function CarsGrid() {
+  // Fetch vehicles directly from Sanity
+  const cars: SanityVehicle[] = await client.fetch(VEHICLES_QUERY);
+
   return (
     <section className="bg-slate-50 py-12 sm:py-20 lg:py-32 text-neutral-900 overflow-hidden">
       <Container>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {cars.map((car) => (
             <article
-              key={car.slug}
+              key={car._id}
               className="group relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white border border-neutral-200/80 flex flex-col transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:border-neutral-300"
             >
               <Link href={`/vehicles/${car.slug}`} className="block h-full flex flex-col">
                 {/* Image Container */}
                 <div className="relative aspect-[16/11] overflow-hidden bg-neutral-100">
-                  <Image
-                    src={car.image}
-                    alt={`${car.year} ${car.brand} ${car.model}`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                  />
+                  {car.image && (
+                    <Image
+                      src={car.image}
+                      alt={`${car.year} ${car.brand} ${car.model}`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                  )}
 
                   {/* Gradient overlay for soft image transition */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-40" />
 
                   {/* Type Badge */}
-                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
-                    <span className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-md border border-neutral-200/60 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-[11px] font-medium tracking-wide uppercase text-neutral-800 shadow-xs">
-                      <span className="h-1 w-1 rounded-full bg-[var(--color-primary)] mr-1.5 animate-pulse" />
-                      {car.type}
-                    </span>
-                  </div>
+                  {car.type && (
+                    <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
+                      <span className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-md border border-neutral-200/60 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-[11px] font-medium tracking-wide uppercase text-neutral-800 shadow-xs">
+                        <span className="h-1 w-1 rounded-full bg-[var(--color-primary)] mr-1.5 animate-pulse" />
+                        {car.type}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Content Container */}
@@ -49,9 +74,11 @@ export default function CarsGrid() {
 
                   <div className="mt-4 sm:mt-6 flex items-center justify-between pt-3 sm:pt-4 border-t border-neutral-100">
                     <div>
-                      <p className="body-sm text-neutral-500 font-mono text-xs">
-                        {car.specifications.doors} · {car.specifications.seats}
-                      </p>
+                      {car.specifications && (
+                        <p className="body-sm text-neutral-500 font-mono text-xs">
+                          {car.specifications.doors} · {car.specifications.seats}
+                        </p>
+                      )}
                       {car.price && (
                         <p className="body-md font-semibold text-[var(--color-primary)] mt-1">
                           {car.price}

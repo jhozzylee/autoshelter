@@ -1,10 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { Product } from "@/data/products";
+interface SanityProduct {
+  _id: string;
+  slug: string;
+  name: string;
+  category: string;
+  brand: string;
+  price: string;
+  image: string;
+  description?: string;
+  inStock?: boolean;
+}
 
 interface ProductCardProps {
-  product: Product;
+  product: SanityProduct;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -16,33 +26,39 @@ export default function ProductCard({ product }: ProductCardProps) {
       >
         {/* Product Image Container */}
         <div className="relative aspect-square w-full overflow-hidden bg-neutral-100">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          />
+          {product.image && (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          )}
 
           {/* Ambient Image Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 pointer-events-none" />
 
           {/* Category Pill */}
-          <div className="absolute left-3.5 top-3.5 z-10 sm:left-4 sm:top-4">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200/80 bg-white/90 px-3 py-1 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-neutral-800 shadow-sm backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
-              {product.category}
-            </span>
-          </div>
+          {product.category && (
+            <div className="absolute left-3.5 top-3.5 z-10 sm:left-4 sm:top-4">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200/80 bg-white/90 px-3 py-1 text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-neutral-800 shadow-sm backdrop-blur-md">
+                <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)]" />
+                {product.category}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Product Info & Meta Details */}
         <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
           <div>
             {/* Brand / Subtitle */}
-            <p className="text-xs uppercase tracking-widest font-semibold text-neutral-400">
-              {product.brand}
-            </p>
+            {product.brand && (
+              <p className="text-xs uppercase tracking-widest font-semibold text-neutral-400">
+                {product.brand}
+              </p>
+            )}
 
             {/* Product Title */}
             <h2 className="text-lg sm:text-xl font-medium tracking-tight text-neutral-950 mt-1.5 transition-colors duration-300 group-hover:text-[var(--color-primary)] leading-snug">
@@ -57,9 +73,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                 Price
               </p>
 
-              <p className="text-lg font-semibold text-neutral-950 mt-0.5">
-                {product.price}
-              </p>
+              {product.price && (
+                <p className="text-lg font-semibold text-neutral-950 mt-0.5">
+                  {product.price}
+                </p>
+              )}
             </div>
 
             {/* Interactive Action Arrow */}

@@ -2,11 +2,11 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
-import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
+import ProductActions from "@/components/sections/inventory/ProductActions";
 import RelatedProducts from "@/components/sections/inventory/RelatedProducts";
-import { products } from "@/data/products";
 import Footer from "@/components/layout/Footer";
+import { client } from "@/sanity/lib/client";
 
 interface ProductPageProps {
   params: Promise<{
@@ -17,7 +17,19 @@ interface ProductPageProps {
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
 
-  const product = products.find((item) => item.slug === slug);
+  // Updated _type to "inventory" to match your Sanity schema structure
+  const query = `*[_type == "inventory" && slug.current == $slug][0]{
+    _id,
+    name,
+    "slug": slug.current,
+    category,
+    brand,
+    price,
+    "image": image.asset->url,
+    description
+  }`;
+
+  const product = await client.fetch(query, { slug });
 
   if (!product) {
     notFound();
@@ -43,22 +55,26 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {/* Product Gallery Container */}
             <div className="lg:col-span-7">
               <div className="relative aspect-square w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-neutral-200/80 bg-neutral-50 shadow-xl shadow-black/5">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 58vw"
-                  className="object-cover"
-                />
+                {product.image && (
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 58vw"
+                    className="object-cover"
+                  />
+                )}
 
                 {/* Glassmorphism Category Badge */}
-                <div className="absolute left-4 top-4 z-10 sm:left-6 sm:top-6">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200/80 bg-white/90 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-neutral-800 shadow-sm backdrop-blur-md">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
-                    {product.category}
-                  </span>
-                </div>
+                {product.category && (
+                  <div className="absolute left-4 top-4 z-10 sm:left-6 sm:top-6">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200/80 bg-white/90 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-neutral-800 shadow-sm backdrop-blur-md">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
+                      {product.category}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -66,9 +82,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div className="lg:col-span-5 flex flex-col justify-between">
               <div>
                 {/* Brand Identifier */}
-                <p className="text-xs uppercase tracking-widest font-semibold text-neutral-400">
-                  {product.brand}
-                </p>
+                {product.brand && (
+                  <p className="text-xs uppercase tracking-widest font-semibold text-neutral-400">
+                    {product.brand}
+                  </p>
+                )}
 
                 {/* Product Name */}
                 <h1 className="h2 tracking-tight text-neutral-950 mt-2 leading-tight">
@@ -86,15 +104,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
 
                 {/* Product Description */}
-                <p className="body-md mt-6 text-neutral-600 font-light leading-relaxed">
-                  {product.description}
-                </p>
+                {product.description && (
+                  <p className="body-md mt-6 text-neutral-600 font-light leading-relaxed">
+                    {product.description}
+                  </p>
+                )}
 
                 {/* Quick Spec Highlights */}
                 <div className="mt-8 grid grid-cols-2 gap-4 rounded-2xl border border-neutral-200/80 bg-neutral-50/50 p-4 text-xs">
                   <div>
                     <span className="block text-neutral-400 uppercase tracking-wider">Manufacturer</span>
-                    <span className="font-semibold text-neutral-900 mt-0.5 block">{product.brand}</span>
+                    <span className="font-semibold text-neutral-900 mt-0.5 block">{product.brand || "N/A"}</span>
                   </div>
                   <div>
                     <span className="block text-neutral-400 uppercase tracking-wider">Guarantee</span>
@@ -103,12 +123,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
               </div>
 
-              {/* Action Button */}
-              <div className="mt-10">
-                <Button className="w-full justify-center py-4">
-                  Add to Cart
-                </Button>
-              </div>
+              {/* Action Buttons (Add to Cart & Direct Buy) */}
+              <ProductActions product={product} />
             </div>
           </div>
         </Container>

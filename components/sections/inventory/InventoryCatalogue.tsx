@@ -4,18 +4,21 @@ import { useMemo, useState } from "react";
 
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import { products } from "@/data/products";
 
 import InventoryFilters from "./InventoryFilters";
 import ProductCard from "./ProductCard";
 
-export default function InventoryCatalogue() {
+interface InventoryCatalogueProps {
+  initialProducts: any[];
+}
+
+export default function InventoryCatalogue({ initialProducts }: InventoryCatalogueProps) {
   const [activeCategory, setActiveCategory] = useState("All Parts");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(8);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    return initialProducts.filter((product) => {
       const matchesCategory =
         activeCategory === "All Parts" ||
         product.category === activeCategory;
@@ -23,13 +26,13 @@ export default function InventoryCatalogue() {
       const searchTerm = searchQuery.toLowerCase();
 
       const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.brand.toLowerCase().includes(searchTerm) ||
-        product.category.toLowerCase().includes(searchTerm);
+        product.name?.toLowerCase().includes(searchTerm) ||
+        product.brand?.toLowerCase().includes(searchTerm) ||
+        product.category?.toLowerCase().includes(searchTerm);
 
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [initialProducts, activeCategory, searchQuery]);
 
   // Reset visible pagination count whenever filters change
   const handleCategoryChange = (category: string) => {
@@ -82,7 +85,7 @@ export default function InventoryCatalogue() {
             <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:gap-6">
               {displayedProducts.map((product) => (
                 <ProductCard
-                  key={product.slug}
+                  key={product._id || product.slug}
                   product={product}
                 />
               ))}
@@ -134,7 +137,7 @@ export default function InventoryCatalogue() {
               <Button
                 variant="ghost"
                 onClick={() => setVisibleCount((prev) => prev + 4)}
-                     >
+              >
                 Load More Parts 
               </Button>
             </div>

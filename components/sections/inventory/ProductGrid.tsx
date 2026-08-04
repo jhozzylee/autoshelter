@@ -3,11 +3,14 @@
 import { useState, useMemo } from "react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import { products, type Product } from "@/data/products";
 import InventoryFilters from "./InventoryFilters";
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid() {
+interface ProductGridProps {
+  initialProducts: any[];
+}
+
+export default function ProductGrid({ initialProducts }: ProductGridProps) {
   const [activeCategory, setActiveCategory] = useState("All Parts");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(8);
@@ -15,18 +18,18 @@ export default function ProductGrid() {
 
   // Filter products by active category and search term
   const filteredProducts = useMemo(() => {
-    return products.filter((product: Product) => {
+    return initialProducts.filter((product) => {
       const matchesCategory =
         activeCategory === "All Parts" ||
-        product.category.toLowerCase() === activeCategory.toLowerCase();
+        product.category?.toLowerCase() === activeCategory.toLowerCase();
 
       const matchesSearch =
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchQuery.toLowerCase());
+        product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.brand?.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [initialProducts, activeCategory, searchQuery]);
 
   // Reset pagination when category or search changes
   const handleCategoryChange = (category: string) => {
@@ -118,7 +121,7 @@ export default function ProductGrid() {
               }`}
             >
               {displayedProducts.map((product) => (
-                <ProductCard key={product.slug} product={product} />
+                <ProductCard key={product._id || product.slug} product={product} />
               ))}
             </div>
           ) : (

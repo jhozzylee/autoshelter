@@ -2,10 +2,11 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 import Container from "@/components/ui/Container";
-import { cars, Car } from "@/data/cars";
 import Footer from "@/components/layout/Footer";
 import VehicleGallery from "@/components/sections/cars/CarsGallery";
 import CarImportCTA from "@/components/sections/cars/CarImportCTA";
+import { client } from "@/sanity/lib/client";
+import { VEHICLES_QUERY, VEHICLE_BY_SLUG_QUERY } from "@/sanity/lib/queries";
 
 interface CarPageProps {
   params: Promise<{
@@ -13,8 +14,11 @@ interface CarPageProps {
   }>;
 }
 
+// Generate static routes dynamically from Sanity
 export async function generateStaticParams() {
-  return cars.map((car) => ({
+  const vehicles = await client.fetch(VEHICLES_QUERY);
+  
+  return vehicles.map((car: { slug: string }) => ({
     slug: car.slug,
   }));
 }
@@ -22,7 +26,8 @@ export async function generateStaticParams() {
 export default async function CarPage({ params }: CarPageProps) {
   const { slug } = await params;
 
-  const car: Car | undefined = cars.find((item) => item.slug === slug);
+  // Fetch the specific vehicle from Sanity by slug
+  const car = await client.fetch(VEHICLE_BY_SLUG_QUERY, { slug });
 
   if (!car) {
     notFound();
@@ -74,14 +79,16 @@ export default async function CarPage({ params }: CarPageProps) {
             {/* Right: Vehicle Image (Order 2 on Mobile) */}
             <div className="lg:col-span-7 order-2 lg:order-none w-full">
               <div className="relative aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden rounded-3xl border border-white/10 bg-neutral-900 shadow-2xl group">
-                <Image
-                  src={car.image}
-                  alt={`${car.year} ${car.brand} ${car.model}`}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                  className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-                />
+                {car.image && (
+                  <Image
+                    src={car.image}
+                    alt={`${car.year} ${car.brand} ${car.model}`}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                  />
+                )}
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
 
@@ -92,7 +99,7 @@ export default async function CarPage({ params }: CarPageProps) {
                         Verified Build
                       </p>
                       <p className="text-xs font-light text-neutral-300 mt-0.5">
-                        {car.specifications.engine} • {car.specifications.transmission}
+                        {car.specifications?.engine} • {car.specifications?.transmission}
                       </p>
                     </div>
                     <span className="text-xs font-mono text-neutral-400">
@@ -103,7 +110,7 @@ export default async function CarPage({ params }: CarPageProps) {
               </div>
             </div>
 
-            {/* CTA Container (Order 3 on Mobile, aligned with left column on Desktop) */}
+            {/* CTA Container */}
             <div className="lg:col-span-5 order-3 lg:order-none w-full lg:-mt-6">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                 <CarImportCTA car={car} className="w-full sm:w-auto justify-center" />
@@ -153,7 +160,7 @@ export default async function CarPage({ params }: CarPageProps) {
                       Engine
                     </p>
                     <p className="body-md font-semibold text-neutral-900 mt-1">
-                      {car.specifications.engine}
+                      {car.specifications?.engine}
                     </p>
                   </div>
 
@@ -162,7 +169,7 @@ export default async function CarPage({ params }: CarPageProps) {
                       Transmission
                     </p>
                     <p className="body-md font-semibold text-neutral-900 mt-1">
-                      {car.specifications.transmission}
+                      {car.specifications?.transmission}
                     </p>
                   </div>
 
@@ -171,7 +178,7 @@ export default async function CarPage({ params }: CarPageProps) {
                       Mileage
                     </p>
                     <p className="body-md font-semibold text-neutral-900 mt-1">
-                      {car.specifications.mileage}
+                      {car.specifications?.mileage}
                     </p>
                   </div>
 
@@ -180,7 +187,7 @@ export default async function CarPage({ params }: CarPageProps) {
                       Capacity
                     </p>
                     <p className="body-md font-semibold text-neutral-900 mt-1">
-                      {car.specifications.doors} • {car.specifications.seats}
+                      {car.specifications?.doors} • {car.specifications?.seats}
                     </p>
                   </div>
                 </div>
