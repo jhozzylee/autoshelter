@@ -73,16 +73,11 @@ export default function InventoryCatalogue({ initialProducts }: InventoryCatalog
                 </span>
               </h2>
             </div>
-
-            <p className="text-xs font-mono text-neutral-400 uppercase tracking-widest">
-              SHOWING {displayedProducts.length} OF {filteredProducts.length}{" "}
-              {filteredProducts.length === 1 ? "PART" : "PARTS"}
-            </p>
           </div>
 
-          {/* Product Grid Layout - Set to 4 Columns on Large Screens */}
+          {/* Product Grid Layout - 2 Columns on Mobile, scaling up smoothly */}
           {displayedProducts.length > 0 ? (
-            <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:gap-6">
+            <div className="grid w-full grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
               {displayedProducts.map((product) => (
                 <ProductCard
                   key={product._id || product.slug}
