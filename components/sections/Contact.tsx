@@ -4,6 +4,8 @@ import { useState } from "react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyETRPbuX2W8RWq_YwfA90rgcFe9WBQpocbCyPkuCtu_orPSfQJiING-LZxoyf5Yglm/exec";
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -20,11 +22,29 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const payload = {
+      formType: "ContactForm",
+      ...formData,
+    };
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+
+      if (result.result === "success") {
+        setIsSubmitted(true);
+      } else {
+        alert("Submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An error occurred while submitting. Please check your connection.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -94,7 +114,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-400">Phone & Service Desk</p>
-                    <p className="text-sm font-medium text-neutral-950">+1 (800) 555-SHELTER</p>
+                    <p className="text-sm font-medium text-neutral-950">+234-803-313-5630</p>
                   </div>
                 </div>
 

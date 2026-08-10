@@ -4,6 +4,8 @@ import { useState } from "react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyETRPbuX2W8RWq_YwfA90rgcFe9WBQpocbCyPkuCtu_orPSfQJiING-LZxoyf5Yglm/exec";
+
 export default function RequestForm() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -26,11 +28,29 @@ export default function RequestForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API request
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+    const payload = {
+      formType: "RequestForm",
+      ...formData,
+    };
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+
+      if (result.result === "success") {
+        setIsSubmitted(true);
+      } else {
+        alert("Submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting import request:", error);
+      alert("An error occurred while submitting. Please check your connection.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -323,7 +343,7 @@ export default function RequestForm() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="justify-center py-4"
+                  className="w-full justify-center py-4"
                 >
                   {isSubmitting ? "Processing Import Request..." : "Request Importation Quote"}
                 </Button>

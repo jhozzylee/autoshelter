@@ -13,6 +13,8 @@ interface ImportModalProps {
   onClose: () => void;
 }
 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyETRPbuX2W8RWq_YwfA90rgcFe9WBQpocbCyPkuCtu_orPSfQJiING-LZxoyf5Yglm/exec";
+
 const fluidTransition = {
   type: "spring" as const,
   damping: 30,
@@ -57,17 +59,31 @@ export default function ImportModal({ car, isOpen, onClose }: ImportModalProps) 
     setIsSubmitting(true);
 
     const payload = {
+      formType: "ImportForm",
       ...formData,
       carSlug: car.slug,
       vehicleTitle: `${car.year} ${car.brand} ${car.model}`,
       estimatedPrice: car.price,
     };
 
-    console.log("Submitting import request:", payload);
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      if (result.result === "success") {
+        setIsSubmitted(true);
+      } else {
+        alert("Submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting import request:", error);
+      alert("An error occurred while submitting. Please check your connection.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
