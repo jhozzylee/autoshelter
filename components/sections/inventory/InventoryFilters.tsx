@@ -3,9 +3,10 @@
 import Container from "@/components/ui/Container";
 
 const categories = [
-  "All Parts",
+ "All Parts",
   "Filters",
   "Brakes",
+  "Suspension",
   "Engine Parts",
   "Cooling System",
   "Wheels",

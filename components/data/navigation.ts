@@ -21,7 +21,6 @@ export const servicesMenu: MegaMenuData = {
   sections: [
     {
       title: "Maintenance",
-
       items: [
         { label: "Oil Change", href: "/services/routine-maintenance" },
         { label: "Brake Service", href: "/services/brakes-steering-suspension" },
@@ -30,21 +29,18 @@ export const servicesMenu: MegaMenuData = {
         { label: "Tire Rotation", href: "/services/routine-maintenance" },
       ],
     },
-
     {
       title: "Diagnostics",
-
       items: [
         { label: "Engine Diagnostics", href: "/services/vehicle-diagnostics" },
         { label: "Electrical Diagnostics", href: "/services/vehicle-diagnostics" },
         { label: "Transmission Diagnostics", href: "/services/vehicle-diagnostics" },
         { label: "Check Engine Light", href: "/services/vehicle-diagnostics" },
+        { label: "Suspension Diagnostics", href: "/services/vehicle-diagnostics" },
       ],
     },
-
     {
       title: "Repairs",
-
       items: [
         { label: "Engine Repair", href: "/services/engine-transmission-repair" },
         { label: "Transmission Repair", href: "/services/engine-transmission-repair" },
@@ -53,10 +49,8 @@ export const servicesMenu: MegaMenuData = {
         { label: "Exhaust Repair", href: "/services/engine-transmission-repair" },
       ],
     },
-
     {
       title: "Detailing",
-
       items: [
         { label: "Interior Detailing", href: "/services/auto-detailing-protection" },
         { label: "Exterior Detailing", href: "/services/auto-detailing-protection" },
@@ -67,7 +61,6 @@ export const servicesMenu: MegaMenuData = {
   ],
 };
 
-
 export const inventoryMenu: MegaMenuData = {
   label: "Inventory",
   href: "/inventory",
@@ -75,43 +68,39 @@ export const inventoryMenu: MegaMenuData = {
   sections: [
     {
       title: "Engine",
-
       items: [
-        { label: "Oil Filters", href: "/inventory/oil-filters" },
-        { label: "Spark Plugs", href: "/inventory/spark-plugs" },
-        { label: "Air Filters", href: "/inventory/air-filters" },
-        { label: "Timing Belts", href: "/inventory/timing-belts" },
+        { label: "Oil Filters", href: "/inventory?category=Filters" },
+        { label: "Spark Plugs", href: "/inventory?category=Engine%20Parts" },
+        { label: "Air Filters", href: "/inventory?category=Filters" },
+        { label: "Timing Belts", href: "/inventory?category=Engine%20Parts" },
       ],
     },
 
     {
       title: "Brakes",
-
       items: [
-        { label: "Brake Pads", href: "/inventory/brake-pads" },
-        { label: "Brake Rotors", href: "/inventory/brake-rotors" },
-        { label: "Brake Fluid", href: "/inventory/brake-fluid" },
+        { label: "Brake Pads", href: "/inventory?category=Brakes" },
+        { label: "Brake Rotors", href: "/inventory?category=Brakes" },
+        { label: "Brake Fluid", href: "/inventory?category=Brakes" },
       ],
     },
 
     {
       title: "Suspension",
-
       items: [
-        { label: "Shock Absorbers", href: "/inventory/shocks" },
-        { label: "Control Arms", href: "/inventory/control-arms" },
-        { label: "Springs", href: "/inventory/springs" },
+        { label: "Shock Absorbers", href: "/inventory?category=Suspension" },
+        { label: "Control Arms", href: "/inventory?category=Suspension" },
+        { label: "Springs", href: "/inventory?category=Suspension" },
       ],
     },
 
     {
       title: "Accessories",
-
       items: [
-        { label: "Seat Covers", href: "/inventory/seat-covers" },
-        { label: "Floor Mats", href: "/inventory/floor-mats" },
-        { label: "Car Batteries", href: "/inventory/batteries" },
-        { label: "Wipers", href: "/inventory/wipers" },
+        { label: "Seat Covers", href: "/inventory?category=Accessories" },
+        { label: "Floor Mats", href: "/inventory?category=Accessories" },
+        { label: "Car Batteries", href: "/inventory?category=Electrical" },
+        { label: "Wipers", href: "/inventory?category=Exterior" },
       ],
     },
   ],

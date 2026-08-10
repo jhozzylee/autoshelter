@@ -92,29 +92,43 @@ export default function Contact() {
 
               {/* Direct Channels */}
               <div className="mt-10 space-y-6">
+                {/* Direct Emails */}
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neutral-200/80 bg-neutral-50 text-neutral-900">
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-400">Direct Email</p>
-                    <a href="mailto:contact@autoshelter.com" className="text-sm font-medium text-neutral-950 hover:text-[var(--color-primary)] transition-colors">
-                      contact@autoshelter.com
-                    </a>
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-400">Direct Emails</p>
+                    <div className="flex flex-col space-y-0.5">
+                      <a href="mailto:admin@auto-shelter.com" className="text-sm font-medium text-neutral-950 hover:text-[var(--color-primary)] transition-colors">
+                        admin@auto-shelter.com
+                      </a>
+                      <a href="mailto:autoshelter.ng@gmail.com" className="text-sm font-medium text-neutral-950 hover:text-[var(--color-primary)] transition-colors">
+                        autoshelter.ng@gmail.com
+                      </a>
+                    </div>
                   </div>
                 </div>
 
+                {/* Phone & Service Desk */}
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neutral-200/80 bg-neutral-50 text-neutral-900">
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
-                  <div>
+                  <div className="space-y-1">
                     <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-400">Phone & Service Desk</p>
-                    <p className="text-sm font-medium text-neutral-950">+234-803-313-5630</p>
+                    <div className="flex flex-col space-y-0.5">
+                      <a href="tel:+2349039067415" className="text-sm font-medium text-neutral-950 hover:text-[var(--color-primary)] transition-colors">
+                        +234 903 906 7415 <span className="text-xs text-neutral-500 font-normal">(NG)</span>
+                      </a>
+                      <a href="tel:+14702064774" className="text-sm font-medium text-neutral-950 hover:text-[var(--color-primary)] transition-colors">
+                        +1 470 206 4774 <span className="text-xs text-neutral-500 font-normal">(US)</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
 
@@ -134,7 +148,7 @@ export default function Contact() {
 
             {/* SLA Indicator */}
             <div className="mt-12 rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-4 text-xs font-mono uppercase tracking-widest text-neutral-500">
-              ⚡ Response Time: Within 2 Hours During Business Hours
+              ⚡ Response Time: Within 1 Hours During Business Hours
             </div>
           </div>
 

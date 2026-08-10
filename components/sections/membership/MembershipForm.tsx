@@ -117,32 +117,47 @@ export default function MembershipForm() {
 
               {/* Direct Communication Channels */}
               <div className="mt-10 space-y-6">
+                {/* Email Desks */}
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-neutral-900/80 text-white">
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-500 font-mono">Membership Desk</p>
-                    <a href="mailto:members@autoshelter.com" className="text-sm font-medium text-white hover:text-[var(--color-primary)] transition-colors">
-                      members@autoshelter.com
-                    </a>
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-500 font-mono">Email Desks</p>
+                    <div className="flex flex-col space-y-0.5">
+                      <a href="mailto:members@auto-shelter.com" className="text-sm font-medium text-white hover:text-[var(--color-primary)] transition-colors">
+                        members@auto-shelter.com
+                      </a>
+                      <a href="mailto:support@auto-shelter.com" className="text-sm font-medium text-white hover:text-[var(--color-primary)] transition-colors">
+                        support@auto-shelter.com
+                      </a>
+                    </div>
                   </div>
                 </div>
 
+                {/* Concierge Hotlines */}
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-neutral-900/80 text-white">
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                   </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-500 font-mono">Concierge Hotline</p>
-                    <p className="text-sm font-medium text-white">+234-803-313-5630</p>
+                  <div className="space-y-1">
+                    <p className="text-[10px] uppercase tracking-widest font-semibold text-neutral-500 font-mono">Concierge Hotlines</p>
+                    <div className="flex flex-col space-y-0.5">
+                      <a href="tel:+2349039067415" className="text-sm font-medium text-white hover:text-[var(--color-primary)] transition-colors">
+                        +234 903 906 7415 <span className="text-xs text-neutral-500 font-normal">(NG)</span>
+                      </a>
+                      <a href="tel:+14702064774" className="text-sm font-medium text-white hover:text-[var(--color-primary)] transition-colors">
+                        +1 470 206 4774 <span className="text-xs text-neutral-500 font-normal">(US)</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
 
+                {/* Operating Hours */}
                 <div className="flex items-start gap-4">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-neutral-900/80 text-white">
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

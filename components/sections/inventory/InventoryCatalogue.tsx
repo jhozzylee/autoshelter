@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
@@ -10,12 +10,22 @@ import ProductCard from "./ProductCard";
 
 interface InventoryCatalogueProps {
   initialProducts: any[];
+  initialCategory?: string; // <-- Added prop
 }
 
-export default function InventoryCatalogue({ initialProducts }: InventoryCatalogueProps) {
-  const [activeCategory, setActiveCategory] = useState("All Parts");
+export default function InventoryCatalogue({ 
+  initialProducts, 
+  initialCategory = "All Parts" 
+}: InventoryCatalogueProps) {
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(8);
+
+  // Sync category state if initialCategory prop changes (e.g., clicking different dropdown links)
+  useEffect(() => {
+    setActiveCategory(initialCategory);
+    setVisibleCount(8);
+  }, [initialCategory]);
 
   const filteredProducts = useMemo(() => {
     return initialProducts.filter((product) => {

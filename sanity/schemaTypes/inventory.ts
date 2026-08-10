@@ -27,14 +27,15 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Filters', value: 'Filters' },
-          { title: 'Brakes', value: 'Brakes' },
-          { title: 'Electrical', value: 'Electrical' },
-          { title: 'Cooling System', value: 'Cooling System' },
-          { title: 'Wheels', value: 'Wheels' },
-          { title: 'Exterior', value: 'Exterior' },
-          { title: 'Engine Parts', value: 'Engine Parts' },
-          { title: 'Accessories', value: 'Accessories' },
+          { title: "Filters", value: "Filters" },
+          { title: "Brakes", value: "Brakes" },
+          { title: "Suspension", value: "Suspension" }, // <-- Added here
+          { title: "Engine Parts", value: "Engine Parts" },
+          { title: "Cooling System", value: "Cooling System" },
+          { title: "Wheels", value: "Wheels" },
+          { title: "Electrical", value: "Electrical" },
+          { title: "Exterior", value: "Exterior" },
+          { title: "Accessories", value: "Accessories" },
         ],
       },
       validation: (Rule) => Rule.required(),
