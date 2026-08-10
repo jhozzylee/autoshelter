@@ -1,0 +1,17 @@
+import { MetadataRoute } from "next";
+
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = "https://auto-shelter.com";
+
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: [
+        "/api/",      // Protect backend API routes from being indexed
+        "/studio/",   // Protect your Sanity Studio CMS backend route
+      ],
+    },
+    sitemap: `${baseUrl}/sitemap.xml`,
+  };
+}

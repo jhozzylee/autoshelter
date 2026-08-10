@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import Container from "@/components/ui/Container";
 import ProductActions from "@/components/sections/inventory/ProductActions";
@@ -14,24 +15,54 @@ interface ProductPageProps {
   }>;
 }
 
+const PRODUCT_QUERY = `*[_type == "inventory" && slug.current == $slug][0]{
+  _id,
+  name,
+  "slug": slug.current,
+  category,
+  brand,
+  price,
+  "image": image.asset->url,
+  description
+}`;
+
+// Generate dynamic meta tags per individual product
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await client.fetch(PRODUCT_QUERY, { slug });
+
+  if (!product) {
+    return {
+      title: "Part Not Found",
+    };
+  }
+
+  const title = `${product.name} - ${product.brand || "OEM Part"}`;
+  const description = product.description || `Buy genuine ${product.name} under ${product.category} category at Auto Shelter.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Auto Shelter Inventory`,
+      description,
+      images: product.image ? [{ url: product.image, width: 1200, height: 630, alt: product.name }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: product.image ? [product.image] : undefined,
+    },
+  };
+}
+
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
 
-  // Updated _type to "inventory" to match your Sanity schema structure
-  const query = `*[_type == "inventory" && slug.current == $slug][0]{
-    _id,
-    name,
-    "slug": slug.current,
-    category,
-    brand,
-    price,
-    "image": image.asset->url,
-    description
-  }`;
-
   // Added revalidation tag matching the "inventory" schema type
   const product = await client.fetch(
-    query, 
+    PRODUCT_QUERY, 
     { slug }, 
     { next: { tags: ["inventory"] } }
   );

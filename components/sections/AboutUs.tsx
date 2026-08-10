@@ -553,7 +553,7 @@ export default function AboutPage() {
                 </Link>
 
                 <Link
-                  href="https://www.aribooking.utilitymobileapps.com/index.html?shopID=5e8614be6498950015ed765a"
+                  href="/booking"
                   className="w-full sm:w-auto"
                 >
                   <Button variant="secondary" className="w-full sm:w-auto justify-center">

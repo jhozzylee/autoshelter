@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import type { Metadata } from "next";
 
 import Container from "@/components/ui/Container";
 import Footer from "@/components/layout/Footer";
@@ -29,6 +30,37 @@ export async function generateStaticParams() {
   return vehicles.map((car: { slug: string }) => ({
     slug: car.slug,
   }));
+}
+
+// Generate dynamic metadata for each individual vehicle page
+export async function generateMetadata({ params }: CarPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const car = await client.fetch(VEHICLE_BY_SLUG_QUERY, { slug });
+
+  if (!car) {
+    return {
+      title: "Vehicle Not Found",
+    };
+  }
+
+  const title = `${car.year} ${car.brand} ${car.model} - Import & Sales`;
+  const description = car.description || `Explore specifications, import details, and high-res gallery for the ${car.year} ${car.brand} ${car.model} at Auto Shelter.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${car.year} ${car.brand} ${car.model} | Auto Shelter Inventory`,
+      description,
+      images: car.image ? [{ url: car.image, width: 1200, height: 630, alt: `${car.year} ${car.brand} ${car.model}` }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: car.image ? [car.image] : undefined,
+    },
+  };
 }
 
 export default async function CarPage({ params }: CarPageProps) {

@@ -8,12 +8,49 @@ import Header from "@/components/layout/Header";
 import CartDrawer from "@/components/ui/CartDrawer";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://auto-shelter.com"), // Replace with your production domain
   title: {
-    default: "Auto Shelter",
+    default: "Auto Shelter | Premium Vehicle Sales, Parts & Expert Maintenance",
     template: "%s | Auto Shelter",
   },
   description:
-    "Professional automobile care and maintenance services.",
+    "Your trusted destination for certified pre-owned vehicle sales, OEM auto parts sourcing, and expert automotive maintenance services.",
+  keywords: ["Auto Repair", "Car Sales", "OEM Auto Parts", "Vehicle Diagnostics", "Auto Shelter", "Mechanic"],
+  authors: [{ name: "Auto Shelter" }],
+  creator: "Zi Creates",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://auto-shelter.com",
+    title: "Auto Shelter | Premium Automotive Services & Inventory",
+    description: "Certified vehicle sales, top-tier OEM parts, and expert maintenance services.",
+    siteName: "Auto Shelter",
+    images: [
+      {
+        url: "/og-image.jpg", // Uses your shared brand image universally
+        width: 1200,
+        height: 630,
+        alt: "Auto Shelter Automotive Ecosystem",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Auto Shelter",
+    description: "Premium vehicle sales, parts, and expert service.",
+    images: ["/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({

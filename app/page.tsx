@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
 import FeaturedCategories from "@/components/sections/FeaturedCategories";
 import Services from "@/components/sections/Services";
@@ -9,19 +10,24 @@ import Testimonials from "@/components/sections/Testimonials";
 import FinalCTA from "@/components/sections/FinalCTA";
 import Footer from "@/components/layout/Footer";
 
+export const metadata: Metadata = {
+  title: "Auto Shelter | Premium Vehicle Sales, Parts & Expert Maintenance",
+  description: "Welcome to Auto Shelter. Discover certified vehicle imports, genuine OEM auto parts, and precision maintenance services engineered for performance.",
+};
+
 export default function Home() {
   return (
     <main>
       <Hero />
       <FeaturedCategories />
       <Services />
-       <VehicleCollection />
-       <WhyUs />
-       <Process />
-       <PartsShowcase />
-       <Testimonials />
-       <FinalCTA />
-       <Footer />
+      <VehicleCollection />
+      <WhyUs />
+      <Process />
+      <PartsShowcase />
+      <Testimonials />
+      <FinalCTA />
+      <Footer />
     </main>
   );
 }

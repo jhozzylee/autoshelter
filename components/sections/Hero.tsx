@@ -164,7 +164,7 @@ export default function Hero() {
               </Button>
             </Link>
 
-            <Link href="https://www.aribooking.utilitymobileapps.com/index.html?shopID=5e8614be6498950015ed765a" className="w-full sm:w-auto">
+            <Link href="/booking" className="w-full sm:w-auto">
               <Button
                 variant="secondary"
                 className="w-full justify-center"

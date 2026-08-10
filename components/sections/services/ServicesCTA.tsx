@@ -33,7 +33,7 @@ export default function ServicesCTA() {
 
             {/* CTA */}
             <div className="mt-10 flex justify-center">
-              <Link href="/book-service" className="w-full sm:w-auto">
+              <Link href="/booking" className="w-full sm:w-auto">
                 <Button className="w-full sm:w-auto rounded-full px-8 py-4 shadow-lg shadow-[var(--color-primary)]/20">
                   Book a Service
                 </Button>

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
@@ -18,6 +19,37 @@ export async function generateStaticParams() {
   return services.map((service) => ({
     slug: service.slug,
   }));
+}
+
+// Generate dynamic metadata for each individual service page
+export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const service = services.find((s) => s.slug === slug);
+
+  if (!service) {
+    return {
+      title: "Service Not Found",
+    };
+  }
+
+  const title = `${service.title} - Professional Auto Care`;
+  const description = service.description || `Schedule professional ${service.title.toLowerCase()} services with certified mechanics at Auto Shelter.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${service.title} | Auto Shelter Services`,
+      description,
+      images: service.image ? [{ url: service.image, width: 1200, height: 630, alt: service.title }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: service.image ? [service.image] : undefined,
+    },
+  };
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {
@@ -56,7 +88,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
               <div className="mt-10">
                 <Link
-                  href="https://www.aribooking.utilitymobileapps.com/index.html?shopID=5e8614be6498950015ed765a"
+                  href="/booking"
                   className="inline-block w-full sm:w-auto"
                 >
                   <Button>Book This Service</Button>
@@ -186,7 +218,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
               <div className="mt-10 flex justify-center">
                 <Link
-                  href="https://www.aribooking.utilitymobileapps.com/index.html?shopID=5e8614be6498950015ed765a"
+                  href="/booking"
                   className="w-full sm:w-auto"
                 >
                   <Button>Book This Service</Button>
