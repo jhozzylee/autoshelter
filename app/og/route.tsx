@@ -1,18 +1,24 @@
+// app/og/route.tsx
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
-export async function GET() {
-  // Read Logo.svg directly from the /public directory
-  const logoPath = join(process.cwd(), "public", "Logo.svg");
-  const logoSvg = await readFile(logoPath, "utf-8");
+export async function GET(request: Request) {
+  const { origin } = new URL(request.url);
+  const logoUrl = `${origin}/Logo.svg`;
 
-  // Convert SVG to base64 Data URL for clean image embedding in @vercel/og
-  const logoDataUrl = `data:image/svg+xml;base64,${Buffer.from(
-    logoSvg
-  ).toString("base64")}`;
+  // Fetch the SVG file and convert it into a Base64 Data URI
+  let logoDataUri = "";
+  try {
+    const res = await fetch(logoUrl);
+    if (res.ok) {
+      const svgText = await res.text();
+      const base64Svg = Buffer.from(svgText).toString("base64");
+      logoDataUri = `data:image/svg+xml;base64,${base64Svg}`;
+    }
+  } catch (err) {
+    console.error("Failed to load OG logo SVG:", err);
+  }
 
   return new ImageResponse(
     (
@@ -44,7 +50,7 @@ export async function GET() {
           }}
         />
 
-        {/* Main Center Content Area */}
+        {/* Content Container */}
         <div
           style={{
             display: "flex",
@@ -54,19 +60,21 @@ export async function GET() {
             zIndex: 10,
           }}
         >
-          {/* Top: Logo (Fixed width: 200px) */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={logoDataUrl}
-            alt="Auto Shelter Logo"
-            style={{
-              width: "200px",
-              height: "auto",
-              objectFit: "contain",
-            }}
-          />
+          {/* Top: Logo */}
+          {logoDataUri ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={logoDataUri}
+              alt="Auto Shelter Logo"
+              style={{
+                width: "200px",
+                height: "auto",
+                objectFit: "contain",
+              }}
+            />
+          ) : null}
 
-          {/* Middle Divider: Subtle Vertical Line with Generous Gaps */}
+          {/* Middle Divider */}
           <div
             style={{
               width: "1px",
@@ -77,14 +85,14 @@ export async function GET() {
             }}
           />
 
-          {/* Bottom: Refined Uppercase Monospace Micro-Text */}
+          {/* Bottom Text */}
           <span
             style={{
               fontSize: "13px",
               fontFamily: "monospace",
               textTransform: "uppercase",
               letterSpacing: "0.3em",
-              color: "#737373", // text-neutral-500
+              color: "#737373",
               textAlign: "center",
             }}
           >

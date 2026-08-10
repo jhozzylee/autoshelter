@@ -18,7 +18,7 @@ const footerLinks = {
   ],
   Contact: [
     { label: "Contact Us", href: "/contact" },
-    { label: "Book a Service", href: "https://www.aribooking.utilitymobileapps.com/index.html?shopID=5e8614be6498950015ed765a" },
+    { label: "Book a Service", href: "/booking" },
     { label: "Become a Member", href: "/membership" },
   ],
   Social: [
