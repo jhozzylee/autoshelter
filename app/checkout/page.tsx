@@ -1,6 +1,11 @@
-// app/checkout/page.tsx
+import dynamic from "next/dynamic";
 import Footer from "@/components/layout/Footer";
-import CheckoutSection from "@/components/sections/CheckoutSection";
+
+// Dynamically import CheckoutSection with SSR disabled to prevent browser-only libraries (like Paystack) from running on the server
+const CheckoutSection = dynamic(
+  () => import("@/components/sections/CheckoutSection"),
+  { ssr: false }
+);
 
 export const metadata = {
   title: "Checkout | Store",
