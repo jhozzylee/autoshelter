@@ -10,11 +10,59 @@ import {
   ArrowLeft,
   ShoppingBag,
   Lock,
-  Loader2
+  Loader2,
+  Info,
+  ChevronDown
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePaystackPayment } from "react-paystack";
+
+// Lagos delivery areas with fees customized for a Lekki-based store
+const lagosDeliveryAreas = [
+  // --- Core Island (₦2,000) ---
+  { name: "Lekki Phase 1", fee: 2000 },
+  { name: "Victoria Island", fee: 2000 },
+  { name: "Ikoyi", fee: 2000 },
+  { name: "Oniru", fee: 2000 },
+  { name: "Ikate", fee: 2000 },
+  { name: "Dolphin Estate", fee: 2000 },
+
+  // --- Close Lekki Corridor (₦3,500) ---
+  { name: "Osapa London", fee: 3500 },
+  { name: "Agungi", fee: 3500 },
+  { name: "Chevron / Ologolo", fee: 3500 },
+  { name: "Jakande", fee: 3500 },
+  { name: "Ikota", fee: 3500 },
+
+  // --- Mid Lekki Corridor (₦4,500) ---
+  { name: "Victoria Garden City (VGC)", fee: 4500 },
+  { name: "Ajah", fee: 4500 },
+  { name: "Badore", fee: 4500 },
+  { name: "Abraham Adesanya", fee: 4500 },
+  { name: "Thomas Estate", fee: 4500 },
+
+  // --- Mainland Hubs (₦6,000) ---
+  { name: "Yaba", fee: 6000 },
+  { name: "Surulere", fee: 6000 },
+  { name: "Ikeja", fee: 6000 },
+  { name: "Ikeja GRA", fee: 6000 },
+  { name: "Gbagada", fee: 6000 },
+  { name: "Maryland", fee: 6000 },
+  { name: "Anthony", fee: 6000 },
+  { name: "Ilupeju", fee: 6000 },
+  { name: "Ebute Metta", fee: 6000 },
+
+  // --- Extended Outskirts (₦8,500 - ₦10,000) ---
+  { name: "Awoyaya", fee: 8500 },
+  { name: "Lakowe", fee: 8500 },
+  { name: "Sangotedo (Deep Axis)", fee: 8500 },
+  { name: "Festac Town", fee: 8500 },
+  { name: "Abule Egba", fee: 8500 },
+  { name: "Egbeda", fee: 8500 },
+  { name: "Ikorodu", fee: 8500 },
+  { name: "Epe Town", fee: 10000 },
+];
 
 export default function CheckoutSection() {
   const { cart, getTotalPrice, clearCart, isLoaded } = useCart();
@@ -30,17 +78,24 @@ export default function CheckoutSection() {
     email: "",
     phone: "",
     address: "",
-    city: "",
-    state: "",
+    city: lagosDeliveryAreas[0].name,
+    state: "Lagos State",
     notes: "",
   });
+
+  const [selectedArea, setSelectedArea] = useState(lagosDeliveryAreas[0]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const subtotal = isLoaded ? getTotalPrice() : 0;
-  const shippingFee = subtotal > 150000 || subtotal === 0 ? 0 : 5000;
+  
+  // Check if state is Lagos
+  const isLagosState = formData.state.toLowerCase().includes("lagos");
+  const parkDispatchFee = 3000; // Flat fee to drop package at the Lekki motor park for interstate buyers
+  
+  const shippingFee = subtotal === 0 ? 0 : (isLagosState ? selectedArea.fee : parkDispatchFee);
   const grandTotal = subtotal + shippingFee;
 
   // Paystack Configuration
@@ -63,6 +118,11 @@ export default function CheckoutSection() {
           variable_name: "phone_number",
           value: formData.phone,
         },
+        {
+          display_name: "Delivery Location",
+          variable_name: "delivery_location",
+          value: `${formData.city}, ${formData.state}`,
+        },
       ],
     },
   };
@@ -73,21 +133,25 @@ export default function CheckoutSection() {
   const onSuccess = async (reference: any) => {
     setIsSubmitting(true);
 
+    const deliveryDescription = isLagosState 
+      ? `${formData.city} (Lagos)` 
+      : `${formData.city}, ${formData.state} (Park Dispatch - Interstate)`;
+
     const orderPayload = {
-      formType: "Orders", // Matches your Google Sheet tab name
+      formType: "Orders",
       reference: reference.reference || reference.trxref,
       customerName: `${formData.firstName} ${formData.lastName}`,
       email: formData.email,
       phone: formData.phone,
-      address: `${formData.address}, ${formData.city}, ${formData.state}`,
+      address: `${formData.address}, ${deliveryDescription}`,
       items: cart.map(item => `${item.quantity}x ${item.title}`).join(", "),
+      shippingFee: formatCurrency(shippingFee),
       totalAmount: formatCurrency(grandTotal),
       notes: formData.notes || "None",
       timestamp: new Date().toISOString(),
     };
 
     try {
-
       await fetch("https://script.google.com/macros/s/AKfycbwtjVd5mq5-73Vv8oljNJIC8TxwZVbtHj4GkCoxUDI8S0ldVfi82taJqdmXzpSUlRSDBA/exec", {
         method: "POST",
         mode: "no-cors",
@@ -110,17 +174,26 @@ export default function CheckoutSection() {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    if (name === "city") {
+      const foundArea = lagosDeliveryAreas.find(area => area.name === value);
+      if (foundArea) {
+        setSelectedArea(foundArea);
+        setFormData(prev => ({ ...prev, city: foundArea.name }));
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
     if (formError) setFormError("");
   };
 
   const handlePayment = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
-    // Validate required fields
     if (
       !formData.firstName ||
       !formData.lastName ||
@@ -142,7 +215,6 @@ export default function CheckoutSection() {
     setFormError("");
     setIsSubmitting(true);
 
-    // Triggers the Paystack Portal Popup
     initializePayment({ onSuccess, onClose });
   };
 
@@ -176,7 +248,7 @@ export default function CheckoutSection() {
           <div className="p-6 rounded-2xl border border-neutral-200 bg-neutral-50/70 text-left mb-8 space-y-3 shadow-sm">
             <div className="flex justify-between text-sm">
               <span className="text-neutral-500">Delivery Address</span>
-              <span className="text-neutral-900 font-medium text-right">{formData.address}, {formData.city}</span>
+              <span className="text-neutral-900 font-medium text-right">{formData.address}, {formData.city}, {formData.state}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-neutral-500">Payment Gateway</span>
@@ -263,7 +335,7 @@ export default function CheckoutSection() {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     placeholder="John"
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all shadow-sm"
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
                   />
                 </div>
 
@@ -279,7 +351,7 @@ export default function CheckoutSection() {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     placeholder="Doe"
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all shadow-sm"
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
                   />
                 </div>
               </div>
@@ -297,7 +369,7 @@ export default function CheckoutSection() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="john@example.com"
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all shadow-sm"
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
                   />
                 </div>
 
@@ -313,14 +385,14 @@ export default function CheckoutSection() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+234 800 000 0000"
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all shadow-sm"
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
                   />
                 </div>
               </div>
 
               <div>
                 <label htmlFor="address" className="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-2">
-                  Street Address *
+                  Street Address / Terminal Info *
                 </label>
                 <input
                   type="text"
@@ -329,26 +401,48 @@ export default function CheckoutSection() {
                   required
                   value={formData.address}
                   onChange={handleInputChange}
-                  placeholder="123 Admiralty Way, Lekki Phase 1"
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all shadow-sm"
+                  placeholder="123 Admiralty Way"
+                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="city" className="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-2">
-                    City *
+                    {isLagosState ? "Lagos Neighborhood *" : "Destination City / Town *"}
                   </label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    required
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    placeholder="Lagos"
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all shadow-sm"
-                  />
+                  {isLagosState ? (
+                    <div className="relative">
+                      <select
+                        id="city"
+                        name="city"
+                        required
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        className="w-full appearance-none rounded-xl border border-neutral-200 bg-white px-4 py-3 pr-10 text-sm text-neutral-900 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
+                      >
+                        {lagosDeliveryAreas.map((area) => (
+                          <option key={area.name} value={area.name}>
+                            {area.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-neutral-500">
+                        <ChevronDown size={16} />
+                      </div>
+                    </div>
+                  ) : (
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      required
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Ibadan / Port Harcourt"
+                      className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
+                    />
+                  )}
                 </div>
 
                 <div>
@@ -363,10 +457,19 @@ export default function CheckoutSection() {
                     value={formData.state}
                     onChange={handleInputChange}
                     placeholder="Lagos State"
-                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all shadow-sm"
+                    className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all shadow-sm"
                   />
                 </div>
               </div>
+
+              {!isLagosState && (
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs leading-relaxed">
+                  <Info size={18} className="flex-shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Interstate Delivery Notice:</strong> We charge a flat fee of <strong>₦3,000</strong> to dispatch your package to the motor park in Lekki. The transit/transport fee from the park to your state will be paid directly by you upon arrival.
+                  </span>
+                </div>
+              )}
 
               <div>
                 <label htmlFor="notes" className="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-2">
@@ -378,8 +481,8 @@ export default function CheckoutSection() {
                   rows={3}
                   value={formData.notes}
                   onChange={handleInputChange}
-                  placeholder="Notes about your delivery, e.g. special gate code."
-                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 transition-all resize-none shadow-sm"
+                  placeholder="Notes about your delivery, e.g. preferred motor park name."
+                  className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/15 transition-all resize-none shadow-sm"
                 />
               </div>
             </div>
@@ -424,11 +527,18 @@ export default function CheckoutSection() {
                   <span className="text-neutral-900 font-medium">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-neutral-600">
-                  <span>Shipping</span>
+                  <span>
+                    {isLagosState ? `Delivery (${formData.city})` : "Lekki Park Dispatch"}
+                  </span>
                   <span className="text-neutral-900 font-medium">
-                    {shippingFee === 0 ? "Free" : formatCurrency(shippingFee)}
+                    {formatCurrency(shippingFee)}
                   </span>
                 </div>
+                {!isLagosState && (
+                  <div className="text-[11px] text-amber-700 italic text-right -mt-2">
+                    + State transport fee on arrival
+                  </div>
+                )}
                 <div className="flex justify-between pt-3 border-t border-neutral-200/80 text-base font-semibold text-neutral-950">
                   <span>Total</span>
                   <span className="text-lg font-bold">{formatCurrency(grandTotal)}</span>
