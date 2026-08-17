@@ -4,7 +4,7 @@ import { useState } from "react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyETRPbuX2W8RWq_YwfA90rgcFe9WBQpocbCyPkuCtu_orPSfQJiING-LZxoyf5Yglm/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtjVd5mq5-73Vv8oljNJIC8TxwZVbtHj4GkCoxUDI8S0ldVfi82taJqdmXzpSUlRSDBA/exec";
 
 export default function RequestForm() {
   const [formData, setFormData] = useState({

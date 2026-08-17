@@ -13,7 +13,7 @@ interface ImportModalProps {
   onClose: () => void;
 }
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyETRPbuX2W8RWq_YwfA90rgcFe9WBQpocbCyPkuCtu_orPSfQJiING-LZxoyf5Yglm/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtjVd5mq5-73Vv8oljNJIC8TxwZVbtHj4GkCoxUDI8S0ldVfi82taJqdmXzpSUlRSDBA/exec";
 
 const fluidTransition = {
   type: "spring" as const,

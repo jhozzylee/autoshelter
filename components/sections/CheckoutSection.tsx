@@ -14,19 +14,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-
-// Declare global Flutterwave Checkout function on window object
-declare global {
-  interface Window {
-    FlutterwaveCheckout?: (config: Record<string, unknown>) => void;
-  }
-}
+import { usePaystackPayment } from "react-paystack";
 
 export default function CheckoutSection() {
   const { cart, getTotalPrice, clearCart, isLoaded } = useCart();
   const [mounted, setMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOrderComplete, setIsOrderComplete] = useState(false);
+  const [formError, setFormError] = useState("");
 
   // Form State
   const [formData, setFormData] = useState({
@@ -40,96 +35,121 @@ export default function CheckoutSection() {
     notes: "",
   });
 
-  // Hydration safety check
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  // Dynamically load Flutterwave Inline SDK script
-  useEffect(() => {
-    if (typeof window !== "undefined" && !window.FlutterwaveCheckout) {
-      const script = document.createElement("script");
-      script.src = "https://checkout.flutterwave.com/v3.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
   }, []);
 
   const subtotal = isLoaded ? getTotalPrice() : 0;
   const shippingFee = subtotal > 150000 || subtotal === 0 ? 0 : 5000;
   const grandTotal = subtotal + shippingFee;
 
+  // Paystack Configuration
+  const paystackPublicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "";
+
+  const config = {
+    reference: `PAY-${new Date().getTime().toString()}`,
+    email: formData.email || "customer@example.com",
+    amount: grandTotal * 100, // Paystack requires amount in kobo
+    publicKey: paystackPublicKey,
+    metadata: {
+      custom_fields: [
+        {
+          display_name: "Customer Name",
+          variable_name: "customer_name",
+          value: `${formData.firstName} ${formData.lastName}`,
+        },
+        {
+          display_name: "Phone Number",
+          variable_name: "phone_number",
+          value: formData.phone,
+        },
+      ],
+    },
+  };
+
+  const initializePayment = usePaystackPayment(config);
+
+  // Success Callback: Logs order to Google Sheet & sends email notification
+  const onSuccess = async (reference: any) => {
+    setIsSubmitting(true);
+
+    const orderPayload = {
+      formType: "Orders", // Matches your Google Sheet tab name
+      reference: reference.reference || reference.trxref,
+      customerName: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      phone: formData.phone,
+      address: `${formData.address}, ${formData.city}, ${formData.state}`,
+      items: cart.map(item => `${item.quantity}x ${item.title}`).join(", "),
+      totalAmount: formatCurrency(grandTotal),
+      notes: formData.notes || "None",
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+
+      await fetch("https://script.google.com/macros/s/AKfycbwtjVd5mq5-73Vv8oljNJIC8TxwZVbtHj4GkCoxUDI8S0ldVfi82taJqdmXzpSUlRSDBA/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderPayload),
+      });
+    } catch (err) {
+      console.error("Failed to sync order to Google Sheet:", err);
+    } finally {
+      setIsSubmitting(false);
+      setIsOrderComplete(true);
+      clearCart();
+    }
+  };
+
+  const onClose = () => {
+    setIsSubmitting(false);
+  };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (formError) setFormError("");
   };
 
-  const handlePayment = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handlePayment = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+
+    // Validate required fields
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.address ||
+      !formData.city ||
+      !formData.state
+    ) {
+      setFormError("Please fill out all required shipping details.");
+      return;
+    }
+
+    if (!paystackPublicKey) {
+      setFormError("Paystack Public Key missing. Please set NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY in .env.local");
+      return;
+    }
+
+    setFormError("");
     setIsSubmitting(true);
 
-    const publicApiKey = process.env.NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY;
-
-    // Build complete order payload
-    const orderPayload = {
-      customer: formData,
-      items: cart,
-      subtotal,
-      shippingFee,
-      total: grandTotal,
-      createdAt: new Date().toISOString(),
-    };
-
-    // If Flutterwave SDK is available and key is configured, invoke popup
-    if (typeof window !== "undefined" && window.FlutterwaveCheckout && publicApiKey) {
-      window.FlutterwaveCheckout({
-        public_key: publicApiKey,
-        tx_ref: `TX-${Date.now()}`,
-        amount: grandTotal,
-        currency: "NGN",
-        payment_options: "card,banktransfer,ussd",
-        customer: {
-          email: formData.email,
-          phone_number: formData.phone,
-          name: `${formData.firstName} ${formData.lastName}`,
-        },
-        customizations: {
-          title: "Store Checkout",
-          description: "Payment for order items",
-          logo: "",
-        },
-        callback: function (data: { status: string; tx_ref: string }) {
-          if (data.status === "successful") {
-            // Optional: submit orderPayload to backend API endpoint here
-            setIsSubmitting(false);
-            setIsOrderComplete(true);
-            clearCart();
-          } else {
-            setIsSubmitting(false);
-          }
-        },
-        onclose: function () {
-          setIsSubmitting(false);
-        },
-      });
-    } else {
-      // Fallback mode for local development or testing without live API keys
-      setTimeout(() => {
-        console.log("Order Processed (Simulated):", orderPayload);
-        setIsSubmitting(false);
-        setIsOrderComplete(true);
-        clearCart();
-      }, 1500);
-    }
+    // Triggers the Paystack Portal Popup
+    initializePayment({ onSuccess, onClose });
   };
 
   const formatCurrency = (amount: number) => {
     return `₦${amount.toLocaleString("en-NG")}`;
   };
 
-  // Hydration fallback
   if (!mounted || !isLoaded) {
     return (
       <div className="py-24 min-h-[60vh] flex items-center justify-center bg-white">
@@ -138,7 +158,7 @@ export default function CheckoutSection() {
     );
   }
 
-  // Success View (Light Theme)
+  // Success View
   if (isOrderComplete) {
     return (
       <div className="py-20 min-h-[70vh] flex items-center justify-center bg-white">
@@ -160,7 +180,7 @@ export default function CheckoutSection() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-neutral-500">Payment Gateway</span>
-              <span className="text-neutral-900 font-medium">Flutterwave</span>
+              <span className="text-neutral-900 font-medium">Paystack</span>
             </div>
             <div className="flex justify-between text-sm pt-3 border-t border-neutral-200 font-medium">
               <span className="text-neutral-700">Total Paid</span>
@@ -177,7 +197,7 @@ export default function CheckoutSection() {
     );
   }
 
-  // Empty Cart View (Light Theme)
+  // Empty Cart View
   if (cart.length === 0) {
     return (
       <div className="py-24 min-h-[60vh] flex items-center justify-center bg-white">
@@ -199,11 +219,9 @@ export default function CheckoutSection() {
     );
   }
 
-  // Main Checkout Flow (Light Theme)
   return (
     <section className="py-12 lg:py-16 bg-white text-neutral-900">
       <Container>
-        {/* Header Breadcrumb */}
         <div className="mb-8">
           <Link 
             href="/inventory" 
@@ -214,9 +232,15 @@ export default function CheckoutSection() {
           <h1 className="text-3xl font-semibold tracking-tight text-neutral-950">Checkout</h1>
         </div>
 
+        {formError && (
+          <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium">
+            {formError}
+          </div>
+        )}
+
         <form onSubmit={handlePayment} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* LEFT COLUMN: Shipping Form (7 cols) */}
+          {/* LEFT COLUMN: Shipping Form */}
           <div className="lg:col-span-7 space-y-8">
             <div className="p-6 sm:p-8 rounded-2xl border border-neutral-200/80 bg-neutral-50/50 space-y-6 shadow-sm">
               <div className="flex items-center gap-3 pb-4 border-b border-neutral-200/80">
@@ -361,14 +385,13 @@ export default function CheckoutSection() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Order Summary & Flutterwave Trigger (5 cols) */}
+          {/* RIGHT COLUMN: Order Summary */}
           <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-6">
             <div className="p-6 sm:p-8 rounded-2xl border border-neutral-200/80 bg-neutral-50/70 space-y-6 shadow-sm">
               <h2 className="text-lg font-medium text-neutral-950 pb-4 border-b border-neutral-200/80">
                 Order Summary
               </h2>
 
-              {/* Items List */}
               <div className="max-h-64 overflow-y-auto space-y-4 pr-1 scrollbar-thin">
                 {cart.map((item) => (
                   <div key={item.id} className="flex items-center gap-4">
@@ -413,17 +436,18 @@ export default function CheckoutSection() {
               </div>
 
               <Button
-                type="submit"
+                type="button"
+                onClick={() => handlePayment()}
                 disabled={isSubmitting}
                 className="w-full justify-center py-4 text-base font-medium shadow-sm flex items-center gap-2"
               >
                 <Lock size={18} />
-                {isSubmitting ? "Processing..." : `Pay ${formatCurrency(grandTotal)} via Flutterwave`}
+                {isSubmitting ? "Opening Portal..." : `Pay ${formatCurrency(grandTotal)} via Paystack`}
               </Button>
 
               <div className="flex items-center justify-center gap-2 text-xs text-neutral-500 pt-2">
                 <ShieldCheck size={16} />
-                <span>Secured by Flutterwave</span>
+                <span>Secured by Paystack</span>
               </div>
             </div>
           </div>

@@ -93,7 +93,7 @@ export default function MegaMenu({ menu, onItemClick }: MegaMenuProps) {
 
       {/* Desktop Content Grid */}
       <div className="hidden lg:block w-full border-b border-t border-white/10 bg-[var(--color-neutral)] backdrop-blur-xl shadow-2xl shadow-black/50 px-16 py-12">
-        <div className="mx-auto grid max-w-7xl grid-cols-4 gap-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-5 gap-12">
           {menu.sections.map((section) => (
             <div key={section.title} className="space-y-5">
               <h4 className="body-sm font-bold uppercase tracking-wider text-[var(--color-primary)]">

@@ -1,4 +1,3 @@
-// components/layout/Header.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -72,7 +71,7 @@ export default function Header() {
             {/* Mobile Left: Icon Morph Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/90 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] lg:hidden overflow-hidden"
+              className="relative flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/95 transition-all hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] lg:hidden overflow-hidden"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
             >
@@ -117,8 +116,10 @@ export default function Header() {
             <div className="flex items-center gap-3 sm:gap-4">
               <a
                 href="https://portal.ari.app/auth/login"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/90 transition-all duration-300 hover:scale-105 hover:bg-white/10 hover:text-white active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] border border-white/10"
-                aria-label="Login"
+                aria-label="Login (opens in a new tab)"
               >
                 <UserRound size={18} />
               </a>

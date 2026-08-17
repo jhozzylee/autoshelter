@@ -1,7 +1,7 @@
 "use client";
 
 export default function WhatsAppButton() {
-  const phoneNumber = "2348138815609";
+  const phoneNumber = "2349039067415";
 
   const message = encodeURIComponent(
     "Hello Auto Shelter, I would like to make an enquiry."

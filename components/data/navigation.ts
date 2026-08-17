@@ -23,10 +23,8 @@ export const servicesMenu: MegaMenuData = {
       title: "Maintenance",
       items: [
         { label: "Oil Change", href: "/services/routine-maintenance" },
-        { label: "Brake Service", href: "/services/brakes-steering-suspension" },
-        { label: "Wheel Alignment", href: "/services/brakes-steering-suspension" },
-        { label: "Battery Replacement", href: "/services/battery-electrical" },
         { label: "Tire Rotation", href: "/services/routine-maintenance" },
+        { label: "Battery Replacement", href: "/services/battery-electrical" },
       ],
     },
     {
@@ -34,9 +32,18 @@ export const servicesMenu: MegaMenuData = {
       items: [
         { label: "Engine Diagnostics", href: "/services/vehicle-diagnostics" },
         { label: "Electrical Diagnostics", href: "/services/vehicle-diagnostics" },
-        { label: "Transmission Diagnostics", href: "/services/vehicle-diagnostics" },
         { label: "Check Engine Light", href: "/services/vehicle-diagnostics" },
+        { label: "Transmission Diagnostics", href: "/services/vehicle-diagnostics" },
         { label: "Suspension Diagnostics", href: "/services/vehicle-diagnostics" },
+      ],
+    },
+    {
+      title: "Suspension",
+      items: [
+        { label: "Brake Service", href: "/services/brakes-steering-suspension" },
+        { label: "Wheel Alignment", href: "/services/brakes-steering-suspension" },
+        { label: "Suspension Repair", href: "/services/brakes-steering-suspension" },
+        { label: "Steering Repair", href: "/services/brakes-steering-suspension" },
       ],
     },
     {
@@ -44,9 +51,8 @@ export const servicesMenu: MegaMenuData = {
       items: [
         { label: "Engine Repair", href: "/services/engine-transmission-repair" },
         { label: "Transmission Repair", href: "/services/engine-transmission-repair" },
-        { label: "Suspension Repair", href: "/services/brakes-steering-suspension" },
-        { label: "Steering Repair", href: "/services/brakes-steering-suspension" },
         { label: "Exhaust Repair", href: "/services/engine-transmission-repair" },
+        { label: "AC & Electrical Service", href: "/services/battery-electrical" },
       ],
     },
     {
@@ -91,6 +97,7 @@ export const inventoryMenu: MegaMenuData = {
         { label: "Shock Absorbers", href: "/inventory?category=Suspension" },
         { label: "Control Arms", href: "/inventory?category=Suspension" },
         { label: "Springs", href: "/inventory?category=Suspension" },
+        { label: "Balljoint", href: "/inventory?category=Suspension" },
       ],
     },
 
@@ -103,6 +110,17 @@ export const inventoryMenu: MegaMenuData = {
         { label: "Wipers", href: "/inventory?category=Exterior" },
       ],
     },
+
+    {
+      title: "Air Conditioning",
+      items: [
+        { label: "Refrigerant", href: "/inventory?category=Accessories" },
+        { label: "Compressor", href: "/inventory?category=Accessories" },
+        { label: "Condensers", href: "/inventory?category=Electrical" },
+        { label: "Evaporators", href: "/inventory?category=Exterior" },
+      ],
+    },
+
   ],
 };
 
