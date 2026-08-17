@@ -409,7 +409,7 @@ export default function CheckoutSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="city" className="block text-xs uppercase tracking-wider font-semibold text-neutral-600 mb-2">
-                    {isLagosState ? "Lagos Neighborhood *" : "Destination City / Town *"}
+                    {isLagosState ? "City *" : "Destination City / Town *"}
                   </label>
                   {isLagosState ? (
                     <div className="relative">
