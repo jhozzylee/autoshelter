@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.44",
     "@paystack/inline-js": "^2.24.0",
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^5.31.1",
+    "ai": "^7.0.70",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
     "lucide-react": "^1.25.0",
@@ -20,6 +22,7 @@
     "openai": "^7.4.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
     "react-paystack": "^6.0.0",
     "sanity": "^5.31.1",
     "styled-components": "^6.4.4",

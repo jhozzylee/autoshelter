@@ -2,11 +2,21 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, Easing } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import ChatBookingWidget from "@/components/chat/ChatBookingWidget";
+import ChatImportWidget from "@/components/chat/ChatImportWidget";
+import ChatMembershipWidget from "@/components/chat/ChatMembershipWidget";
+import ChatPartsWidget, { PartItem } from "@/components/chat/ChatPartsWidget";
 
 interface Message {
   id: string;
   sender: "bot" | "user";
   text: string;
+  showBookingWidget?: boolean;
+  showImportWidget?: boolean;
+  showMembershipWidget?: boolean;
+  whatsappRedirect?: string | null;
+  parts?: PartItem[];
 }
 
 const DEFAULT_SUGGESTIONS = [
@@ -69,10 +79,19 @@ export default function Chatbot() {
 
       if (!response.ok) throw new Error(data.error || "Something went wrong");
 
+      if (data.whatsappRedirect) {
+        window.open(data.whatsappRedirect, "_blank");
+      }
+
       const botReply: Message = {
         id: (Date.now() + 1).toString(),
         sender: "bot",
         text: data.reply,
+        showBookingWidget: data.showBookingWidget || false,
+        showImportWidget: data.showImportWidget || false,
+        showMembershipWidget: data.showMembershipWidget || false,
+        whatsappRedirect: data.whatsappRedirect || null,
+        parts: data.parts || null,
       };
 
       setMessages((prev) => [...prev, botReply]);
@@ -90,7 +109,6 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -149,8 +167,8 @@ export default function Chatbot() {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex ${
-                    msg.sender === "user" ? "justify-end" : "justify-start"
+                  className={`flex flex-col ${
+                    msg.sender === "user" ? "items-end" : "items-start"
                   }`}
                 >
                   <div
@@ -160,8 +178,50 @@ export default function Chatbot() {
                         : "bg-white border border-neutral-200/80 text-neutral-800 rounded-tl-sm shadow-sm font-normal"
                     }`}
                   >
-                    {msg.text}
+                    {msg.sender === "user" ? (
+                      msg.text
+                    ) : (
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
+                          ul: ({ children }) => <ul className="my-2 pl-4 list-disc space-y-1">{children}</ul>,
+                          ol: ({ children }) => <ol className="my-2 pl-4 list-decimal space-y-1">{children}</ol>,
+                          li: ({ children }) => <li className="leading-snug">{children}</li>,
+                          strong: ({ children }) => <strong className="font-semibold text-neutral-900">{children}</strong>,
+                        }}
+                      >
+                        {msg.text}
+                      </ReactMarkdown>
+                    )}
                   </div>
+
+                  {/* Render WhatsApp Direct Action Button */}
+                  {msg.whatsappRedirect && (
+                    <a
+                      href={msg.whatsappRedirect}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2.5 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-medium text-white hover:bg-emerald-700 transition-all shadow-sm active:scale-95"
+                    >
+                      <svg
+                        className="h-4 w-4 fill-current"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.205 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                      </svg>
+                      Connect on WhatsApp (+234 903 906 7415)
+                    </a>
+                  )}
+
+                  {/* Render Sanity Parts Carousel */}
+                  {msg.parts && msg.parts.length > 0 && (
+                    <ChatPartsWidget parts={msg.parts} />
+                  )}
+
+                  {/* Render Widgets triggered by tool calls */}
+                  {msg.showBookingWidget && <ChatBookingWidget />}
+                  {msg.showImportWidget && <ChatImportWidget />}
+                  {msg.showMembershipWidget && <ChatMembershipWidget />}
                 </div>
               ))}
 
@@ -239,7 +299,7 @@ export default function Chatbot() {
         )}
       </AnimatePresence>
 
-      {/* Floating Chatbot Toggle Button */}
+      {/* Floating Toggle Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
