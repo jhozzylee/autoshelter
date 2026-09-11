@@ -29,6 +29,7 @@ export default function MembershipForm() {
     vehicleYear: "",
     registrationNumber: "",
     notes: "",
+    websiteUrl: "", // Honeypot field state
   });
 
   const handleInterestToggle = (interest: string) => {
@@ -50,11 +51,23 @@ export default function MembershipForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // --- HONEYPOT CHECK ---
+    // If a bot filled out the hidden field, return fake success & drop payload
+    if (formData.websiteUrl && formData.websiteUrl.trim() !== "") {
+      setIsSubmitted(true);
+      return;
+    }
+    // ----------------------
+
     setIsSubmitting(true);
+
+    // Exclude honeypot field from real submission payload
+    const { websiteUrl, ...cleanFormData } = formData;
 
     const payload = {
       formType: "MembershipForm",
-      ...formData,
+      ...cleanFormData,
       interests: selectedInterests.join(", "),
     };
 
@@ -204,6 +217,7 @@ export default function MembershipForm() {
                         vehicleYear: "",
                         registrationNumber: "",
                         notes: "",
+                        websiteUrl: "",
                       });
                       setSelectedInterests([]);
                     }}
@@ -214,6 +228,24 @@ export default function MembershipForm() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* --- HONEYPOT FIELD (Hidden from real users) --- */}
+                  <div
+                    style={{ display: "none", position: "absolute", left: "-9999px" }}
+                    aria-hidden="true"
+                  >
+                    <label htmlFor="websiteUrl">Do not fill this field</label>
+                    <input
+                      type="text"
+                      id="websiteUrl"
+                      name="websiteUrl"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={formData.websiteUrl}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  {/* ----------------------------------------------- */}
+
                   {/* Section 01: Personal Details */}
                   <div className="space-y-4">
                     <div className="border-b border-white/10 pb-2">

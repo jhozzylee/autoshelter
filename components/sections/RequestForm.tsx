@@ -19,6 +19,7 @@ export default function RequestForm() {
     importTimeline: "1-3 Months",
     destinationCountry: "",
     notes: "",
+    websiteUrl: "", // Honeypot field state
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,11 +27,23 @@ export default function RequestForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // --- HONEYPOT CHECK ---
+    // If a bot filled out the hidden field, return fake success & drop payload
+    if (formData.websiteUrl && formData.websiteUrl.trim() !== "") {
+      setIsSubmitted(true);
+      return;
+    }
+    // ----------------------
+
     setIsSubmitting(true);
+
+    // Exclude honeypot field from real submission payload
+    const { websiteUrl, ...cleanFormData } = formData;
 
     const payload = {
       formType: "RequestForm",
-      ...formData,
+      ...cleanFormData,
     };
 
     try {
@@ -63,7 +76,7 @@ export default function RequestForm() {
   };
 
   return (
-    <section className="bg-white pt-24 sm:pt-28  py-12 sm:py-16 lg:py-24">
+    <section className="bg-white pt-24 sm:pt-28 py-12 sm:py-16 lg:py-24">
       <Container>
         <div className="mx-auto max-w-4xl">
           {/* Header */}
@@ -110,6 +123,7 @@ export default function RequestForm() {
                       importTimeline: "1-3 Months",
                       destinationCountry: "",
                       notes: "",
+                      websiteUrl: "",
                     });
                   }}
                   className="mt-6 text-xs font-semibold uppercase tracking-widest text-[var(--color-primary)] hover:underline"
@@ -119,6 +133,24 @@ export default function RequestForm() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8">
+                {/* --- HONEYPOT FIELD (Hidden from real users) --- */}
+                <div
+                  style={{ display: "none", position: "absolute", left: "-9999px" }}
+                  aria-hidden="true"
+                >
+                  <label htmlFor="websiteUrl">Do not fill this field</label>
+                  <input
+                    type="text"
+                    id="websiteUrl"
+                    name="websiteUrl"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.websiteUrl}
+                    onChange={handleChange}
+                  />
+                </div>
+                {/* ----------------------------------------------- */}
+
                 {/* Section 1: Vehicle Specifications */}
                 <div>
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4 border-b border-neutral-200/80 pb-2">

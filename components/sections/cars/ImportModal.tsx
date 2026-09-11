@@ -32,6 +32,7 @@ export default function ImportModal({ car, isOpen, onClose }: ImportModalProps) 
     destinationCity: "",
     timeline: "1-3 Months",
     notes: "",
+    websiteUrl: "", // Honeypot field state
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,11 +57,23 @@ export default function ImportModal({ car, isOpen, onClose }: ImportModalProps) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // --- HONEYPOT CHECK ---
+    // If a bot filled out the hidden field, return fake success & drop payload
+    if (formData.websiteUrl && formData.websiteUrl.trim() !== "") {
+      setIsSubmitted(true);
+      return;
+    }
+    // ----------------------
+
     setIsSubmitting(true);
+
+    // Exclude honeypot field from real submission payload
+    const { websiteUrl, ...cleanFormData } = formData;
 
     const payload = {
       formType: "ImportForm",
-      ...formData,
+      ...cleanFormData,
       carSlug: car.slug,
       vehicleTitle: `${car.year} ${car.brand} ${car.model}`,
       estimatedPrice: car.price,
@@ -222,6 +235,24 @@ export default function ImportModal({ car, isOpen, onClose }: ImportModalProps) 
 
                     <form onSubmit={handleSubmit} className="space-y-5 text-left">
                       
+                      {/* --- HONEYPOT FIELD (Hidden from real users) --- */}
+                      <div
+                        style={{ display: "none", position: "absolute", left: "-9999px" }}
+                        aria-hidden="true"
+                      >
+                        <label htmlFor="websiteUrl">Do not fill this field</label>
+                        <input
+                          type="text"
+                          id="websiteUrl"
+                          name="websiteUrl"
+                          tabIndex={-1}
+                          autoComplete="off"
+                          value={formData.websiteUrl}
+                          onChange={handleChange}
+                        />
+                      </div>
+                      {/* ----------------------------------------------- */}
+
                       {/* Row 1 */}
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>

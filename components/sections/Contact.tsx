@@ -13,6 +13,7 @@ export default function Contact() {
     inquiryType: "Vehicle Sales",
     subject: "",
     message: "",
+    websiteUrl: "", // Honeypot field state
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,11 +21,23 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // --- HONEYPOT CHECK ---
+    // If a bot filled out the hidden field, return fake success & drop payload
+    if (formData.websiteUrl && formData.websiteUrl.trim() !== "") {
+      setIsSubmitted(true);
+      return;
+    }
+    // ----------------------
+
     setIsSubmitting(true);
+
+    // Exclude honeypot field from real submission payload
+    const { websiteUrl, ...cleanFormData } = formData;
 
     const payload = {
       formType: "ContactForm",
-      ...formData,
+      ...cleanFormData,
     };
 
     try {
@@ -169,7 +182,7 @@ export default function Contact() {
                   <button
                     onClick={() => {
                       setIsSubmitted(false);
-                      setFormData({ name: "", email: "", inquiryType: "Vehicle Sales", subject: "", message: "" });
+                      setFormData({ name: "", email: "", inquiryType: "Vehicle Sales", subject: "", message: "", websiteUrl: "" });
                     }}
                     className="mt-6 text-xs font-semibold uppercase tracking-widest text-[var(--color-primary)] hover:underline"
                   >
@@ -178,6 +191,24 @@ export default function Contact() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* --- HONEYPOT FIELD (Hidden from real users) --- */}
+                  <div
+                    style={{ display: "none", position: "absolute", left: "-9999px" }}
+                    aria-hidden="true"
+                  >
+                    <label htmlFor="websiteUrl">Do not fill this field</label>
+                    <input
+                      type="text"
+                      id="websiteUrl"
+                      name="websiteUrl"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={formData.websiteUrl}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  {/* ----------------------------------------------- */}
+
                   {/* Inquiry Type Selector */}
                   <div>
                     <label htmlFor="inquiryType" className="block text-xs font-semibold uppercase tracking-wider text-neutral-700 mb-2">
